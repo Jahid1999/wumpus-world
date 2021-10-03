@@ -1,0 +1,221 @@
+<html>
+
+<head>
+  <meta name="google-site-verification" content="_wZ35Xum9aqHSxcBbLx_RvjqJBHuamAQ6qmru5QZNWc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wumpus World</title>
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png">
+  <link rel="manifest" href="img/site.webmanifest">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+  </script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
+  </script>
+  <script src="js/misc.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/addons/p5.sound.js" onload="updateVolume"></script>
+  <script src="js/sketch.js"></script>
+  <script src="js/progressbar.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/room.js"></script>
+  <script src="js/agent.js"></script>
+  <script src="js/wumpus.js"></script>
+  <script src="js/pit.js"></script>
+  <script src="js/gold.js"></script>
+  <script src="js/breeze.js"></script>
+  <script src="js/astar.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/bootstrap-social.css">
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: cadetblue;">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="" data-toggle="modal" data-target="#controlsModal">
+            Controls
+          </a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="" data-toggle="modal" data-target="#aboutModal">
+            About
+          </a>
+        </li>
+
+        <li class="nav-item active">
+          <a class="nav-link" href="" data-toggle="modal" data-target="#instructionModal">
+            Instructions
+          </a>
+        </li>
+        
+        <li class="nav-item active" id="github-profile-button">
+          <a class="btn btn-social-icon btn-github" target="_blank" href="https://github.com/Jahid1999">
+            <span class="fa fa-github"></span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="sidebar-container">
+      <div class="sidebar">
+        <div class="sidebar-content">
+          <label for="world-size-slider">World size: <span class="world-size-value"></span></label><br>
+          <input type="range" min="4" max="10" value="4" class="slider" id="world-size-slider">
+        </div>
+        <div class="sidebar-content">
+          <input type="checkbox" id="cheat-mode">
+          <label for="cheat-mode">Cheat</label>
+        </div>
+
+        <button type="button" class="btn btn-success btn-lg" >Start</button>
+        <button type="button" class="btn btn-dark btn-lg" onclick="restart(); this.blur();">Restart</button>
+
+        <div class="sidebar-content" style="opacity: 0;">
+          <label for="volume-slider">Volume: <span class="volume-value"></span></label><br>
+          <input type="range" min="0" max="100" value="50" class="slider" id="volume-slider">
+        </div>
+
+      </div>
+    </div>
+    <div id="canvas-container" class="canvas-container"></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="modal fade" id="controlsModal" tabindex="-1" role="dialog" aria-labelledby="controlsModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document" style="font-family: cursive;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="controlsModalLabel" style="font-weight: bold; color: crimson;">Manual Controls</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+
+            <div class="col-6" style="border-right: 1px dashed #333;">
+              <ol style="font-size: 20px; font-weight: bold;">
+                <li>Up    ----- ↑ or W</li>
+                <li>Down  ----- ↓ or S</li>
+                <li>Left  ----- ← or A</li>
+                <li>Right ----- → or D</li>
+                <li>Shoot ----- Enter</li>
+              </ol>
+            </div>
+            <div class="col-6">
+              <img src="img/controls.png" style="width:100%">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title" id="aboutModalLabel" style="font-family: cursive; color: crimson;">3 Musketeers</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-6">
+              <img src="assets/devs.jpg" width="380" height="300">
+            </div>
+            <div class="col-6">
+              <h4 style="text-align:center; font-weight: bold; font-family: cursive;">Developers</h4>
+              <hr>
+              <ol style="font-family: cursive; font-size: 20px; font-weight: 600;">
+                <li> <a href="https://github.com/bsse1006" target="_blank">Yasin Sazid</a> (BSSE 1006)</li>
+                <li> <a href="https://github.com/atkia" target="_blank">Atkia Akila Karim</a> (BSSE 1015)</li>
+                <li> <a href="https://github.com/Jahid1999" target="_blank">Abdullah Al Jahid</a> (BSSE 1030)</li>
+              </ol>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instruction -->
+  <div class="modal fade" id="instructionModal" tabindex="-1" role="dialog" aria-labelledby="instructionModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="aboutModalLabel" style="color: crimson; font-weight: bold; font-family: cursive;">Instructions</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h5 style="font-family: cursive; font-weight: 700;">About Wumpus World:</h5>
+          <div style="font-family: cursive;">
+            The Wumpus world is a simple world example to illustrate the worth of a knowledge-based agent and to represent
+            knowledge representation. It was inspired by a video game Hunt the Wumpus by Gregory Yob in 1973. <br>
+            <br>
+            The Wumpus world is a cave which has rooms connected with passageways. We have a knowledge-based agent who
+            will go forward in this world. The cave has a room with a beast which is called Wumpus, who eats anyone who enters the
+            room. The Wumpus can be shot by the agent, but the agent has only one arrow first. So, he has to be careful about shooting the arrow.
+            In the Wumpus world, there are pits which are bottomless, and if the agent falls in a pit, he will be stuck there
+            forever, the game will be ended. The agent's goal is to find the gold and kill the Wumpus without falling into a pit or getting killed by the
+            Wumpus. In the rooms directly adjacent to a pit, the agent can perceive a breeze and in the rooms directly adjacent to the wumpus, the agent can perceive a stench.
+          </div>
+          <br>
+      
+          <h5 style="font-family: cursive; font-weight: 700;">How to Play:</h5>
+          <div style="font-family: cursive;">
+            The Wumpus world is a simple world example to illustrate the worth of a knowledge-based agent and to represent
+            knowledge representation. It was inspired by a video game Hunt the Wumpus by Gregory Yob in 1973. <br>
+            <br>
+            The Wumpus world is a cave which has rooms connected with passageways. We have a knowledge-based agent who
+            will go forward in this world. The cave has a room with a beast which is called Wumpus, who eats anyone who enters the
+            room. The Wumpus can be shot by the agent, but the agent has only one arrow first. So, he has to be careful about shooting the arrow.
+            In the Wumpus world, there are pits which are bottomless, and if the agent falls in a pit, he will be stuck there
+            forever, the game will be ended. The agent's goal is to find the gold and kill the Wumpus without falling into a pit or getting killed by the
+            Wumpus. In the rooms directly adjacent to a pit, the agent can perceive a breeze and in the rooms directly adjacent to the wumpus, the agent can perceive a stench.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
