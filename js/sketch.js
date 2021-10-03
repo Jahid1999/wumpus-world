@@ -27,8 +27,8 @@ let bar;
 let cheatMode = false;
 
 function loadAssets(callback) {
-    wumpus_image = loadImage('assets/textures/wumpus.png', callback);
-    wumpus_dead_image = loadImage('assets/textures/wumpus_dead.png', callback);
+    wumpus_image = loadImage('assets/textures/wumpus1.png', callback);
+    wumpus_dead_image = loadImage('assets/textures/wumpus_dead1.png', callback);
     gold_image = loadImage('assets/textures/gold.png', callback);
     breeze_image = loadImage('assets/textures/breeze1.png', callback);
     stench_image = loadImage('assets/textures/stench.png', callback);

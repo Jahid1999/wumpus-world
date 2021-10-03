@@ -87,13 +87,16 @@ class World {
             var pitY = parseInt(availableRooms[pitIndex].split(" ")[1]);
             availableRooms.splice(pitIndex, 1);
             this.getRoom(pitX, pitY).addObject(new Pit(createVector(pitX, pitY), this));
+            this.getRoom(pitX, pitY).addAttribute("Pit");
         
             for (var dx = -1; dx <= 1; dx++) {
                 for (var dy = -1; dy <= 1; dy++) {
                     if ((dx != 0 || dy != 0) && Math.abs(dx) + Math.abs(dy) < 2) {
                         if (this.getRoom(pitX + dx, pitY + dy) != null) {
-                            var breeze = new Breeze(createVector(pitX + dx, pitY + dy), this);
-                            this.getRoom(pitX + dx, pitY + dy).addObject(breeze);
+                            if(!this.getRoom(pitX + dx, pitY + dy).attributes.has("Pit")){
+                                var breeze = new Breeze(createVector(pitX + dx, pitY + dy), this);
+                                this.getRoom(pitX + dx, pitY + dy).addObject(breeze);
+                            }
                             this.getRoom(pitX + dx, pitY + dy).addAttribute("Breeze");
                         }
                     }
@@ -101,13 +104,13 @@ class World {
             }
         }
 
-        // Spawn arrow
-        var arrowIndex = getRandomInt(availableRooms.length);
-        var arrowX = parseInt(availableRooms[arrowIndex].split(" ")[0]);
-        var arrowY = parseInt(availableRooms[arrowIndex].split(" ")[1]);
-        availableRooms.splice(arrowIndex, 1);
-        this.getRoom(arrowX, arrowY).addArrow();
-        this.arrowPosition = createVector(arrowX, arrowY);
+        // // Spawn arrow
+        // var arrowIndex = getRandomInt(availableRooms.length);
+        // var arrowX = parseInt(availableRooms[arrowIndex].split(" ")[0]);
+        // var arrowY = parseInt(availableRooms[arrowIndex].split(" ")[1]);
+        // availableRooms.splice(arrowIndex, 1);
+        // this.getRoom(arrowX, arrowY).addArrow();
+        // this.arrowPosition = createVector(arrowX, arrowY);
     }
 
     getRoom(x, y) {

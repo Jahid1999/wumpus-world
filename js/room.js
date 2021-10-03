@@ -27,7 +27,7 @@ class Room {
     removeAttribute(attr) {
         this.attributes.delete(attr);
     }
-
+    
     addObject(obj) {
         this.objects.add(obj);
     }
