@@ -64,6 +64,8 @@ class World {
             for (var dy = -1; dy <= 1; dy++) {
                 if ((dx != 0 || dy != 0) && Math.abs(dx) + Math.abs(dy) < 2) {
                     if (this.getRoom(wumpusX + dx, wumpusY + dy) != null) {
+                        var stench = new Stench(createVector(wumpusX + dx, wumpusY + dy), this);
+                        this.getRoom(wumpusX + dx, wumpusY + dy).addObject(stench);
                         this.getRoom(wumpusX + dx, wumpusY + dy).addAttribute("Stench");
                     }
                 }

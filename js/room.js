@@ -76,8 +76,21 @@ class Room {
             if (this.objects.size > 0) {
                 this.objects.forEach(obj => {
                     obj.display();
+                    // if(this.attributes.has("Breeze")) {
+                    //     fill(0);
+                    //     let size = this.size / 4 < 20 ? this.size / 4 : 20;
+                    //     textSize(size);
+                    //     textAlign(CENTER, TOP);
+                    //     strokeWeight(0.5);
+                    //     let s = "";
+                    //     this.attributes.forEach((value) => {
+                    //         s += value + "\n"
+                    //     });
+                    //     text(s, this.position.x * this.size, this.position.y * this.size + this.size * 0.1, this.size, this.size - this.size * 0.1);
+                    // }
                 });
-            } else {
+            } 
+            else {
                 fill(0);
                 let size = this.size / 4 < 20 ? this.size / 4 : 20;
                 textSize(size);
@@ -89,7 +102,8 @@ class Room {
                 });
                 text(s, this.position.x * this.size, this.position.y * this.size + this.size * 0.1, this.size, this.size - this.size * 0.1);
             }
-        } else {
+        } 
+        else {
             fill(100);
             square(this.position.x * this.size, this.position.y * this.size, this.size);
         }

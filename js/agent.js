@@ -30,7 +30,8 @@ class Agent {
                     break;
         }
         if (this.alive) {
-            image(img, this.position.x * this.world.roomSize, this.position.y * this.world.roomSize, this.world.roomSize, this.world.roomSize);
+            var gap = this.world.roomSize/10
+            image(img, this.position.x * this.world.roomSize + gap, this.position.y * this.world.roomSize + gap, this.world.roomSize - 2 * gap, this.world.roomSize - 2 * gap);
             if (this.hasArrow) {
                 image(arrow_overlay_image, this.position.x * this.world.roomSize, this.position.y * this.world.roomSize, this.world.roomSize, this.world.roomSize);
             }

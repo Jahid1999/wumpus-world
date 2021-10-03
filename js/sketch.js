@@ -6,6 +6,7 @@ let wumpus_image;
 let wumpus_dead_image;
 let gold_image;
 let breeze_image;
+let stench_image;
 let agent_up_image;
 let agent_down_image;
 let agent_left_image
@@ -29,14 +30,15 @@ function loadAssets(callback) {
     wumpus_image = loadImage('assets/textures/wumpus.png', callback);
     wumpus_dead_image = loadImage('assets/textures/wumpus_dead.png', callback);
     gold_image = loadImage('assets/textures/gold.png', callback);
-    breeze_image = loadImage('assets/textures/breeze.png', callback);
-    agent_up_image = loadImage('assets/textures/agent_up.png', callback);
-    agent_down_image = loadImage('assets/textures/agent_down.png', callback);
-    agent_left_image = loadImage('assets/textures/agent_left.png', callback);
-    agent_right_image = loadImage('assets/textures/agent_right.png', callback);
+    breeze_image = loadImage('assets/textures/breeze1.png', callback);
+    stench_image = loadImage('assets/textures/stench.png', callback);
+    agent_up_image = loadImage('assets/textures/agent_up1.png', callback);
+    agent_down_image = loadImage('assets/textures/agent_down1.png', callback);
+    agent_left_image = loadImage('assets/textures/agent_left1.png', callback);
+    agent_right_image = loadImage('assets/textures/agent_right1.png', callback);
     arrow_overlay_image = loadImage('assets/textures/arrow_overlay.png', callback)
-    pit_image = loadImage('assets/textures/pit.png', callback);
-    terrain_image = loadImage('assets/textures/hell1.png', callback);
+    pit_image = loadImage('assets/textures/pit1.png', callback);
+    terrain_image = loadImage('assets/textures/hell3.jpg', callback);
     bell_sound = loadSound('assets/sounds/bell.wav', callback);
     victory_sound = loadSound('assets/sounds/victory.wav', callback);
     defeat_sound = loadSound('assets/sounds/lose.wav', callback);
