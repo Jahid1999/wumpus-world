@@ -34,13 +34,13 @@ class World {
         // var agentIndex = getRandomInt(availableRooms.length - 1);
         // var agentX = parseInt(availableRooms[agentIndex].split(" ")[0]);
         // var agentY = parseInt(availableRooms[agentIndex].split(" ")[1]);
-        var agentPos = [[0, 0], 
-                        [0, this.roomsPerRow - 1], 
-                        [this.roomsPerRow - 1, 0], 
-                        [this.roomsPerRow - 1, this.roomsPerRow - 1]]
-                        [getRandomInt(4)];
-        var agentX = agentPos[0];
-        var agentY = agentPos[1];
+        // var agentPos = [[0, 0], 
+        //                 [0, this.roomsPerRow - 1], 
+        //                 [this.roomsPerRow - 1, 0], 
+        //                 [this.roomsPerRow - 1, this.roomsPerRow - 1]]
+        //                 [getRandomInt(4)];
+        var agentX = 0;
+        var agentY = this.roomsPerRow - 1;
         this.agent = new Agent(createVector(agentX, agentY), this);
         this.agent.getCurrentRoom().containsAgent = true;
         for (var dx = -1; dx <= 1; dx++) {
