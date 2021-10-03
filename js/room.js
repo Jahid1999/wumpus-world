@@ -27,7 +27,7 @@ class Room {
     removeAttribute(attr) {
         this.attributes.delete(attr);
     }
-    
+
     addObject(obj) {
         this.objects.add(obj);
     }
@@ -60,6 +60,16 @@ class Room {
         let result = false;
         this.objects.forEach(obj => {
             if (obj instanceof Pit) {
+                result = true;
+            }
+        });
+        return result;
+    }
+
+    containsGold() {
+        let result = false;
+        this.objects.forEach(obj => {
+            if (obj instanceof Gold) {
                 result = true;
             }
         });

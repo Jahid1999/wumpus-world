@@ -97,6 +97,13 @@ class Agent {
         } else if (this.world.getRoom(this.position.x, this.position.y).containsPit()) {
             this.world.showAllRooms();
             this.kill();
+        } else if (this.world.getRoom(this.position.x, this.position.y).containsGold()) {
+            console.log("Victory!");
+            victory_sound.play();
+            this.world.showAllRooms();
+            if (worldAutoIncrement) {
+                setWorldSize(parseInt(roomsPerRow) + 1);
+            }
         }
         if (this.world.getRoom(this.position.x, this.position.y).containsArrow) {
             this.world.getRoom(this.position.x, this.position.y).removeArrow();
