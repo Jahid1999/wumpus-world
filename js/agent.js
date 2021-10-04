@@ -6,6 +6,7 @@ class Agent {
         this.world = world;
         this.alive = true;
         this.hasArrow = true;
+        this.collectedGold = 0;
         world.showRoom(pos.x, pos.y);
         world.showRoom(pos.x - 1, pos.y);
         world.showRoom(pos.x, pos.y - 1);
@@ -98,17 +99,27 @@ class Agent {
             this.world.showAllRooms();
             this.kill();
         } else if (this.world.getRoom(this.position.x, this.position.y).containsGold()) {
-            console.log("Victory!");
-            victory_sound.play();
-            this.world.showAllRooms();
-            if (worldAutoIncrement) {
-                setWorldSize(parseInt(roomsPerRow) + 1);
-            }
+            this.collectedGold += 1;
+            this.world.getRoom(this.position.x, this.position.y).objects.forEach(obj => {
+                if (obj instanceof Gold) {
+                    this.world.getRoom(this.position.x, this.position.y).objects.delete(obj);
+                }
+            });
+
+            this.checkWin();
         }
         if (this.world.getRoom(this.position.x, this.position.y).containsArrow) {
             this.world.getRoom(this.position.x, this.position.y).removeArrow();
             this.hasArrow = true;
             bell_sound.play();
+        }
+    }
+
+    checkWin() {
+        if(this.collectedGold == this.world.totalGold) {
+            console.log("Victory!");
+            victory_sound.play();
+            this.world.showAllRooms();
         }
     }
 

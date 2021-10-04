@@ -1,6 +1,7 @@
 $(document).ready(function () {
     updateWorldSize();
     updatePitPercentage();
+    updateGoldNumber();
 });
 
 $(document).keydown(function (e) {
@@ -16,6 +17,10 @@ $(document).on('input', '#world-size-slider', function () {
 
 $(document).on('input', '#pit-number-slider', function () {
     updatePitPercentage();
+});
+
+$(document).on('input', '#gold-number-slider', function () {
+    updateGoldNumber();
 });
 
 $(document).on('mouseup', 'input[type=\'range\']', function () {
@@ -59,5 +64,11 @@ function setWorldSize(value) {
 function updatePitPercentage() {
     pitPercentage = $('#pit-number-slider').val();
     $('.pit-number-value').html(`${pitPercentage * 10} %`);
+    restart();
+}
+
+function updateGoldNumber() {
+    totalGold = $('#gold-number-slider').val();
+    $('.gold-number-value').html(`${totalGold}`);
     restart();
 }
