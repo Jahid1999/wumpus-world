@@ -2,7 +2,7 @@ class Agent {
     constructor(pos, world) {
         this.position = pos;
         // 0: right, 1: down, 2: left, 3: up
-        this.direction = 1;
+        this.direction = 0;
         this.world = world;
         this.alive = true;
         this.hasArrow = true;

@@ -1,5 +1,6 @@
 $(document).ready(function () {
     updateWorldSize();
+    updatePitPercentage();
 });
 
 $(document).keydown(function (e) {
@@ -11,6 +12,10 @@ $(document).keydown(function (e) {
 
 $(document).on('input', '#world-size-slider', function () {
     updateWorldSize();
+});
+
+$(document).on('input', '#pit-number-slider', function () {
+    updatePitPercentage();
 });
 
 $(document).on('mouseup', 'input[type=\'range\']', function () {
@@ -49,4 +54,10 @@ function setWorldSize(value) {
     $('#world-size-slider').val(value);
     roomsPerRow = value;
     $('.world-size-value').html(`${value}x${value}`);
+}
+
+function updatePitPercentage() {
+    pitPercentage = $('#pit-number-slider').val();
+    $('.pit-number-value').html(`${pitPercentage * 10} %`);
+    restart();
 }

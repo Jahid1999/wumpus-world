@@ -1,6 +1,7 @@
 class World {
-    constructor(roomsPerRow) {
+    constructor(roomsPerRow, pitPercentage) {
         this.roomsPerRow = roomsPerRow;
+        this.pitPercentage = pitPercentage/10;
         this.roomSize = canvasSize / this.roomsPerRow;
         this.rooms = [];
         this.createRooms();
@@ -13,6 +14,7 @@ class World {
     }
 
     createRooms() {
+        console.log('kkkk---' + this.pitPercentage);
         for (var i = 0; i < this.roomsPerRow; i++) {
             this.rooms.push(new Array());
             for (var j = 0; j < this.roomsPerRow; j++) {
@@ -81,7 +83,7 @@ class World {
         this.getRoom(goldX, goldY).addObject(this.gold);
        
         // Add Pits
-        for (var i = 0; i < Math.floor((this.roomsPerRow * this.roomsPerRow) / 10); i++) {
+        for (var i = 0; i < Math.floor((this.roomsPerRow * this.roomsPerRow) * this.pitPercentage); i++) {
             var pitIndex = getRandomInt(availableRooms.length - 1);
             var pitX = parseInt(availableRooms[pitIndex].split(" ")[0]);
             var pitY = parseInt(availableRooms[pitIndex].split(" ")[1]);

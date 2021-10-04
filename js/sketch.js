@@ -1,5 +1,6 @@
 let canvasSize = 800;
 let roomsPerRow = 4;
+let pitPercentage = 2;
 let worldAutoIncrement = false;    
 let wumpusWorld;
 let wumpus_image;
@@ -64,12 +65,13 @@ function setup() {
     canvas.parent("canvas-container");
     bar = new ProgressBar(filesToLoad);
     loadAssets(loadCallback);
-    wumpusWorld = new World(roomsPerRow);
+    wumpusWorld = new World(roomsPerRow, pitPercentage);
     updateVolume();
+    updatePitPercentage();
 }
 
 function restart() {
-    wumpusWorld = new World(roomsPerRow);
+    wumpusWorld = new World(roomsPerRow, pitPercentage);
     flies_sound.stop();
     wind_sound.forEach(sound => {
         sound.stop();
