@@ -79,3 +79,9 @@ label {
 #world-auto-increment {
     margin-right: 5px;
 }
+
+.sidebar-label {
+    color: crimson;
+    font-family: cursive;
+    font-weight: bold;
+}

@@ -81,23 +81,23 @@
     <div class="sidebar-container">
       <div class="sidebar">
         <div class="sidebar-content">
-          <label for="world-size-slider">World size: <span class="world-size-value"></span></label><br>
-          <input type="range" min="4" max="10" value="10" class="slider" id="world-size-slider">
+          <label for="world-size-slider" class="sidebar-label">World size: <span class="world-size-value"></span></label><br>
+          <input type="range" min="6" max="10" value="10" class="slider" id="world-size-slider">
         </div>
 
         <div class="sidebar-content">
-          <label for="pit-number-slider">Pit Percentage: <span class="pit-number-value"></span></label><br>
+          <label for="pit-number-slider" class="sidebar-label">Pit Percentage: <span class="pit-number-value"></span></label><br>
           <input type="range" min="1" max="5" value="2" class="slider" id="pit-number-slider">
         </div>
 
         <div class="sidebar-content">
-          <label for="gold-number-slider">Golds: <span class="gold-number-value"></span></label><br>
+          <label for="gold-number-slider" class="sidebar-label">Golds: <span class="gold-number-value"></span></label><br>
           <input type="range" min="1" max="5" value="2" class="slider" id="gold-number-slider">
         </div>
 
         <div class="sidebar-content">
           <input type="checkbox" id="cheat-mode">
-          <label for="cheat-mode">Cheat</label>
+          <label for="cheat-mode" style="font-family: cursive;">Cheat</label>
         </div>
 
         <button type="button" class="btn btn-success btn-lg" >Start</button>
@@ -197,30 +197,41 @@
         </div>
         <div class="modal-body" style="overflow: auto; max-height: 700;">
           <h5 style="font-family: cursive; font-weight: 700;">About Wumpus World:</h5>
-          <div style="font-family: cursive;">
-            The Wumpus world is a simple world example to illustrate the worth of a knowledge-based agent and to represent
-            knowledge representation. It was inspired by a video game Hunt the Wumpus by Gregory Yob in 1973. <br>
-            <br>
-            The Wumpus world is a cave which has rooms connected with passageways. We have a knowledge-based agent who
-            will go forward in this world. The cave has a room with a beast which is called Wumpus, who eats anyone who enters the
-            room. The Wumpus can be shot by the agent, but the agent has only one arrow first. So, he has to be careful about shooting the arrow.
-            In the Wumpus world, there are pits which are bottomless, and if the agent falls in a pit, he will be stuck there
-            forever, the game will be ended. The agent's goal is to find the gold and kill the Wumpus without falling into a pit or getting killed by the
-            Wumpus. In the rooms directly adjacent to a pit, the agent can perceive a breeze and in the rooms directly adjacent to the wumpus, the agent can perceive a stench.
+          <div style="font-family: cursive; text-align: justify;">
+            The <b>Wumpus world</b> is a cave consisting of rooms connected by passageways. Lurking somewhere in
+            the cave is the terrible <b>Wumpus</b>, a beast that eats anyone who enters its room. The Wumpus can be
+            shot by an <b>agent</b>, but the agent has <b>only one</b> arrow. Some rooms contain bottomless <b>pits</b> that will trap
+            anyone who wanders into these rooms. The only mitigating feature of this bleak environment is the
+            possibility of finding a heap of gold and kill the Wumpus without falling into a pit or getting killed by the
+            Wumpus. In the rooms directly adjacent to a pit, the agent can perceive a <b>breeze</b> and in the rooms directly adjacent 
+            to the wumpus, the agent can perceive a <b>stench</b>. <br>        
           </div>
           <br>
       
-          <h5 style="font-family: cursive; font-weight: 700;">How to Play:</h5>
-          <div style="font-family: cursive;">
-            The Wumpus world is a simple world example to illustrate the worth of a knowledge-based agent and to represent
-            knowledge representation. It was inspired by a video game Hunt the Wumpus by Gregory Yob in 1973. <br>
-            <br>
-            The Wumpus world is a cave which has rooms connected with passageways. We have a knowledge-based agent who
-            will go forward in this world. The cave has a room with a beast which is called Wumpus, who eats anyone who enters the
-            room. The Wumpus can be shot by the agent, but the agent has only one arrow first. So, he has to be careful about shooting the arrow.
-            In the Wumpus world, there are pits which are bottomless, and if the agent falls in a pit, he will be stuck there
-            forever, the game will be ended. The agent's goal is to find the gold and kill the Wumpus without falling into a pit or getting killed by the
-            Wumpus. In the rooms directly adjacent to a pit, the agent can perceive a breeze and in the rooms directly adjacent to the wumpus, the agent can perceive a stench.
+          <h5 style="font-family: cursive; font-weight: 700;">Know The Environment:</h5>
+          <div style="font-family: cursive; margin:10px 0px 10px 0px;">
+            <div class="row">
+              <div class="col-2" style="text-align: center; border-right: 1px dashed #333;">
+                <img src="assets/textures/agent_down1.png">
+                <b>Agent</b>
+              </div>
+              <div class="col-2" style="text-align: center; border-right: 1px dashed #333;">
+                <img src="assets/textures/wumpus1.png"  height="64px" width="64px">
+                <b>Wumpus</b>
+              </div> 
+              <div class="col-2" style="text-align: center; border-right: 1px dashed #333;">
+                <img src="assets/textures/breeze1.png" height="64px" width="64px" >
+                <b>Breeze</b>
+              </div>
+              <div class="col-2" style="text-align: center; border-right: 1px dashed #333;">
+                <img src="assets/textures/stench.png" height="64px" width="64px">
+                <b>Stench</b>
+              </div>
+              <div class="col-2" style="text-align: center;">
+                <img src="assets/textures/gold.png" height="64px" width="64px">
+                <b>Gold</b>
+              </div>
+            </div>
           </div>
           <h5 style="font-family: cursive; font-weight: 700;">How to Play:</h5>
           <div style="font-family: cursive;">

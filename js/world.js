@@ -82,6 +82,7 @@ class World {
             availableRooms.splice(goldIndex, 1);
             this.gold = new Gold(createVector(goldX, goldY), this);
             this.getRoom(goldX, goldY).addObject(this.gold);
+            this.getRoom(goldX, goldY).addAttribute("Glitter");
         }
        
         // Add Pits
