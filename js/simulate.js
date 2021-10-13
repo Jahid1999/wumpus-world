@@ -4,9 +4,26 @@ class Simulate {
     }
 
     play() {       
+        var ai = new Ai (this.world);
         setInterval(()=>{
-            this.world.agent.right();
-        }, 1000);        
+            let nextMove = ai.getNextMove();
+            if (nextMove==0)
+            {
+                this.world.agent.up();
+            }
+            else if (nextMove==1)
+            {
+                this.world.agent.right();
+            }
+            else if (nextMove==2)
+            {
+                this.world.agent.down();
+            }
+            else if (nextMove==3)
+            {
+                this.world.agent.left();
+            }
+        }, 2000);        
     }
 
 }
