@@ -79,7 +79,7 @@ class Ai {
         console.log(row);
         console.log(col);
         this.pathKnowledge[row][col]++;//=this.pathKnowledge[row][col]+1;
-        if (this.wholeWorldKnowledge.getRoom(row,col).containsBreeze()==true)
+        if (this.wholeWorldKnowledge.getRoom(col,row).containsBreeze())
         {
             this.breezeKnowledge[row][col]=1;
         }
@@ -88,7 +88,7 @@ class Ai {
             this.breezeKnowledge[row][col]=-1;
         }
 
-        if (this.wholeWorldKnowledge.getRoom(row,col).containsStench()==true)
+        if (this.wholeWorldKnowledge.getRoom(col,row).containsStench())
         {
             this.stenchKnowledge[row][col]=1;
         }
@@ -96,6 +96,8 @@ class Ai {
         {
             this.stenchKnowledge[row][col]=-1;
         }
+
+        console.log("Update breeze for " + row + "and" + col + " : " + this.breezeKnowledge[row][col]);
     }
 
     finalMove() {
