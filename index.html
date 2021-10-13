@@ -36,6 +36,7 @@
   <script src="js/gold.js"></script>
   <script src="js/stench.js"></script>
   <script src="js/breeze.js"></script>
+  <script src="js/simulate.js"></script>
   <script src="js/astar.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -69,7 +70,7 @@
         </li>
         
         <li class="nav-item active" id="github-profile-button">
-          <a class="btn btn-social-icon btn-github" target="_blank" href="https://github.com/Jahid1999">
+          <a class="btn btn-social-icon btn-github" target="_blank" href="https://github.com/Jahid1999/wumpus-world">
             <span class="fa fa-github"></span>
           </a>
         </li>
@@ -100,7 +101,7 @@
           <label for="cheat-mode" style="font-family: cursive;">Cheat</label>
         </div>
 
-        <button type="button" class="btn btn-success btn-lg" >Start</button>
+        <button type="button" class="btn btn-success btn-lg" onclick="simulate()">Start</button>
         <button type="button" class="btn btn-info btn-lg" onclick="restart(); this.blur();">Restart</button>
 
       

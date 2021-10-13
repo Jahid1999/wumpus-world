@@ -62,6 +62,7 @@ class World {
         availableRooms.splice(wumpusIndex, 1);
         this.wumpus = new Wumpus(createVector(wumpusX, wumpusY), this);
         this.getRoom(wumpusX, wumpusY).addObject(this.wumpus);
+        this.getRoom(wumpusX, wumpusY).addAttribute("Wumpus");
         for (var dx = -1; dx <= 1; dx++) {
             for (var dy = -1; dy <= 1; dy++) {
                 if ((dx != 0 || dy != 0) && Math.abs(dx) + Math.abs(dy) < 2) {
