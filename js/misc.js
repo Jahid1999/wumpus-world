@@ -63,7 +63,7 @@ function setWorldSize(value) {
 
 function updatePitPercentage() {
     pitPercentage = $('#pit-number-slider').val();
-    $('.pit-number-value').html(`${pitPercentage * 10} %`);
+    $('.pit-number-value').html(`${pitPercentage} %`);
     restart();
 }
 

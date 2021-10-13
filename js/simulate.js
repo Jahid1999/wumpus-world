@@ -3,9 +3,12 @@ class Simulate {
         this.world = world;
     }
 
-    play() {       
-        setInterval(()=>{
-            this.world.agent.right();
+    play() {     
+        var i = 0;  
+       interval = setInterval(()=>{
+            // this.world.agent.right();
+            i = i + 1;
+            console.log("hhe--" + i);
         }, 1000);        
     }
 

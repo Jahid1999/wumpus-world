@@ -104,10 +104,13 @@ class Agent {
             this.kill();
         } else if (this.world.getRoom(this.position.x, this.position.y).containsGold()) {
             this.collectedGold += 1;
+            goldCollected +=1;
             this.world.getRoom(this.position.x, this.position.y).objects.forEach(obj => {
                 if (obj instanceof Gold) {
-                    this.world.getRoom(this.position.x, this.position.y).removeAttribute("Glitter");
-                    this.world.getRoom(this.position.x, this.position.y).objects.delete(obj);
+                    setTimeout(() => {
+                        this.world.getRoom(this.position.x, this.position.y).removeAttribute("Glitter");
+                        this.world.getRoom(this.position.x, this.position.y).objects.delete(obj);
+                    }, 500);
                 }
             });
 
@@ -122,9 +125,12 @@ class Agent {
 
     checkWin() {
         if(this.collectedGold == this.world.totalGold) {
-            console.log("Victory!");
-            victory_sound.play();
-            this.world.showAllRooms();
+            setTimeout(() => {
+                this.alive = false;
+                console.log("Victory!");
+                victory_sound.play();
+                this.world.showAllRooms();
+            }, 1000);
         }
     }
 

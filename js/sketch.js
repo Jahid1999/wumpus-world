@@ -2,6 +2,7 @@ let canvasSize = 800;
 let roomsPerRow = 4;
 let pitPercentage = 2;
 let totalGold = 2;
+let goldCollected = 0;
 let worldAutoIncrement = false;    
 let wumpusWorld;
 let wumpus_image;
@@ -27,6 +28,7 @@ let loadCounter = 0;
 let filesToLoad = 16;
 let bar;
 let cheatMode = false;
+let interval;
 
 function loadAssets(callback) {
     wumpus_image = loadImage('assets/textures/wumpus1.png', callback);
@@ -73,6 +75,7 @@ function setup() {
 }
 
 function restart() {
+    clearInterval(interval);
     wumpusWorld = new World(roomsPerRow, pitPercentage, totalGold);
     flies_sound.stop();
     wind_sound.forEach(sound => {
