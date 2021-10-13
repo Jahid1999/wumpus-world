@@ -137,3 +137,8 @@ function cheat() {
         wumpusWorld.hideRooms();
     }
 }
+function simulate () {
+    simulator = new Simulate(wumpusWorld);
+
+    simulator.play();
+}

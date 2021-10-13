@@ -102,6 +102,7 @@ class Agent {
             this.collectedGold += 1;
             this.world.getRoom(this.position.x, this.position.y).objects.forEach(obj => {
                 if (obj instanceof Gold) {
+                    this.world.getRoom(this.position.x, this.position.y).removeAttribute("Glitter");
                     this.world.getRoom(this.position.x, this.position.y).objects.delete(obj);
                 }
             });
