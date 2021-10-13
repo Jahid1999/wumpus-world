@@ -47,7 +47,8 @@ class Agent {
         if (this.alive && this.world.wumpus.alive) {
             if (this.direction != 3) {
                 this.direction = 3;
-            } else if (this.position.y > 0) {
+            }
+            if (this.position.y > 0) {
                 this.position.y--;
                 this.world.showRoom(this.position.x, this.position.y);
             }
@@ -59,7 +60,8 @@ class Agent {
         if (this.alive && this.world.wumpus.alive) {
             if (this.direction != 1) {
                 this.direction = 1;
-            } else if (this.position.y < this.world.roomsPerRow - 1) {
+            }
+            if (this.position.y < this.world.roomsPerRow - 1) {
                 this.position.y++;
                 this.world.showRoom(this.position.x, this.position.y);
             }
@@ -71,7 +73,8 @@ class Agent {
         if (this.alive && this.world.wumpus.alive) {
             if (this.direction != 2) {
                 this.direction = 2;
-            } else if (this.position.x > 0) {
+            }
+            if (this.position.x > 0) {
                 this.position.x--;
                 this.world.showRoom(this.position.x, this.position.y);
             }
@@ -83,7 +86,8 @@ class Agent {
         if (this.alive && this.world.wumpus.alive) {
             if (this.direction != 0) {
                 this.direction = 0;
-            } else if (this.position.x < this.world.roomsPerRow - 1) {
+            }
+            if (this.position.x < this.world.roomsPerRow - 1) {
                 this.position.x++;
                 this.world.showRoom(this.position.x, this.position.y);
             }
