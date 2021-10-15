@@ -1,34 +1,34 @@
 class Agent {
     constructor(pos, world) {
         this.position = pos;
-        // 0: right, 1: down, 2: left, 3: up
-        this.direction = 0;
+        // 0: up, 1: right, 2: down, 3: left
+        this.direction = 1;
         this.world = world;
         this.alive = true;
         this.hasArrow = true;
         this.collectedGold = 0;
         world.showRoom(pos.x, pos.y);
-        world.showRoom(pos.x - 1, pos.y);
-        world.showRoom(pos.x, pos.y - 1);
-        world.showRoom(pos.x + 1, pos.y);
-        world.showRoom(pos.x, pos.y + 1);
+        // world.showRoom(pos.x - 1, pos.y);
+        // world.showRoom(pos.x, pos.y - 1);
+        // world.showRoom(pos.x + 1, pos.y);
+        // world.showRoom(pos.x, pos.y + 1);
     }
 
     display() {
         let img;
         switch (this.direction) {
             case 0:
+                img = agent_up_image;
+                break;
+           case 1:
                 img = agent_right_image;
                 break;
-                case 1:
-                    img = agent_down_image;
+           case 2:
+                img = agent_down_image;
                 break;
-                case 2:
-                    img = agent_left_image;
+           case 3:
+                img = agent_left_image;
                 break;
-                case 3:
-                    img = agent_up_image;
-                    break;
         }
         if (this.alive) {
             var gap = this.world.roomSize/10
@@ -45,38 +45,24 @@ class Agent {
 
     up() {
         if (this.alive && this.world.wumpus.alive) {
-            if (this.direction != 3) {
-                this.direction = 3;
+            if(isManualMode) {
+                if (this.direction != 0) {
+                    this.direction = 0;
+                }
+                else if (this.position.y > 0) {
+                    this.position.y--;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
             }
-            if (this.position.y > 0) {
-                this.position.y--;
-                this.world.showRoom(this.position.x, this.position.y);
-            }
-            this.checkCurrentRoom();
-        }
-    }
-
-    down() {
-        if (this.alive && this.world.wumpus.alive) {
-            if (this.direction != 1) {
-                this.direction = 1;
-            }
-            if (this.position.y < this.world.roomsPerRow - 1) {
-                this.position.y++;
-                this.world.showRoom(this.position.x, this.position.y);
-            }
-            this.checkCurrentRoom();
-        }
-    }
-
-    left() {
-        if (this.alive && this.world.wumpus.alive) {
-            if (this.direction != 2) {
-                this.direction = 2;
-            }
-            if (this.position.x > 0) {
-                this.position.x--;
-                this.world.showRoom(this.position.x, this.position.y);
+            
+            else {
+                if (this.direction != 0) {
+                    this.direction = 0;
+                }
+                if (this.position.y > 0) {
+                    this.position.y--;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
             }
             this.checkCurrentRoom();
         }
@@ -84,16 +70,78 @@ class Agent {
 
     right() {
         if (this.alive && this.world.wumpus.alive) {
-            if (this.direction != 0) {
-                this.direction = 0;
+            if(isManualMode) {
+                if (this.direction != 1) {
+                    this.direction = 1;
+                }
+                else if (this.position.x < this.world.roomsPerRow - 1) {
+                    this.position.x++;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
             }
-            if (this.position.x < this.world.roomsPerRow - 1) {
-                this.position.x++;
-                this.world.showRoom(this.position.x, this.position.y);
+
+            else {
+                if (this.direction != 1) {
+                    this.direction = 1;
+                }
+                if (this.position.x < this.world.roomsPerRow - 1) {
+                    this.position.x++;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
             }
             this.checkCurrentRoom();
         }
     }
+
+    down() {
+        if (this.alive && this.world.wumpus.alive) {
+            if(isManualMode) {
+                if (this.direction != 2) {
+                    this.direction = 2;
+                }
+                else if (this.position.y < this.world.roomsPerRow - 1) {
+                    this.position.y++;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
+            }
+
+            else {
+                if (this.direction != 2) {
+                    this.direction = 2;
+                }
+                if (this.position.y < this.world.roomsPerRow - 1) {
+                    this.position.y++;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
+            }
+            this.checkCurrentRoom();
+        }
+    }
+
+    left() {
+        if (this.alive && this.world.wumpus.alive) {
+            if(isManualMode) {
+                if (this.direction != 3) {
+                    this.direction = 3;
+                }
+                if (this.position.x > 0) {
+                    this.position.x--;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
+            }
+
+            else {
+                if (this.direction != 3) {
+                    this.direction = 3;
+                }
+                if (this.position.x > 0) {
+                    this.position.x--;
+                    this.world.showRoom(this.position.x, this.position.y);
+                }
+            }
+            this.checkCurrentRoom();
+        }
+    } 
 
     checkCurrentRoom() {
         if (this.world.getRoom(this.position.x, this.position.y).containsWumpus() && this.world.wumpus.alive) {
@@ -104,10 +152,13 @@ class Agent {
             this.kill();
         } else if (this.world.getRoom(this.position.x, this.position.y).containsGold()) {
             this.collectedGold += 1;
+            goldCollected +=1;
             this.world.getRoom(this.position.x, this.position.y).objects.forEach(obj => {
                 if (obj instanceof Gold) {
-                    this.world.getRoom(this.position.x, this.position.y).removeAttribute("Glitter");
-                    this.world.getRoom(this.position.x, this.position.y).objects.delete(obj);
+                    setTimeout(() => {
+                        this.world.getRoom(this.position.x, this.position.y).removeAttribute("Glitter");
+                        this.world.getRoom(this.position.x, this.position.y).objects.delete(obj);
+                    }, 500);
                 }
             });
 
@@ -122,9 +173,11 @@ class Agent {
 
     checkWin() {
         if(this.collectedGold == this.world.totalGold) {
-            console.log("Victory!");
-            victory_sound.play();
-            this.world.showAllRooms();
+            setTimeout(() => {
+                console.log("Victory!");
+                victory_sound.play();
+                this.world.showAllRooms();
+            }, 1000);
         }
     }
 

@@ -4,6 +4,7 @@ class Simulate {
     }
 
     play() {       
+        isManualMode = false;
         var ai = new Ai (this.world);
         setInterval(()=>{
             let nextMove = ai.getNextMove();
@@ -29,5 +30,4 @@ class Simulate {
             //call next move when array is empty
         }, 2000);        
     }
-
 }

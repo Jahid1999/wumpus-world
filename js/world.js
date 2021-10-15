@@ -1,7 +1,7 @@
 class World {
     constructor(roomsPerRow, pitPercentage, totalGold) {
         this.roomsPerRow = roomsPerRow;
-        this.pitPercentage = pitPercentage/10;
+        this.pitPercentage = pitPercentage/100;
         this.totalGold = totalGold;
         this.roomSize = canvasSize / this.roomsPerRow;
         this.rooms = [];

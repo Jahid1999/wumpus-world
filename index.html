@@ -39,7 +39,6 @@
   <script src="js/stench.js"></script>
   <script src="js/breeze.js"></script>
   <script src="js/simulate.js"></script>
-  <script src="js/astar.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/bootstrap-social.css">
@@ -90,14 +89,14 @@
 
         <div class="sidebar-content">
           <label for="pit-number-slider" class="sidebar-label">Pit Percentage: <span class="pit-number-value"></span></label><br>
-          <input type="range" min="1" max="5" value="2" class="slider" id="pit-number-slider">
+          <input type="range" min="5" max="20" value="10" class="slider" id="pit-number-slider">
         </div>
 
         <div class="sidebar-content">
-          <label for="gold-number-slider" class="sidebar-label">Golds: <span class="gold-number-value"></span></label><br>
+          <label for="gold-number-slider" class="sidebar-label">Total Golds: <span class="gold-number-value"></span></label><br>
           <input type="range" min="1" max="5" value="2" class="slider" id="gold-number-slider">
         </div>
-
+      
         <div class="sidebar-content">
           <input type="checkbox" id="cheat-mode">
           <label for="cheat-mode" style="font-family: cursive;">Cheat</label>
