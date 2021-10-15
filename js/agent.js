@@ -124,7 +124,7 @@ class Agent {
                 if (this.direction != 3) {
                     this.direction = 3;
                 }
-                if (this.position.x > 0) {
+                else if (this.position.x > 0) {
                     this.position.x--;
                     this.world.showRoom(this.position.x, this.position.y);
                 }

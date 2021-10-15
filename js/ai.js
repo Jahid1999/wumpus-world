@@ -80,8 +80,8 @@ class Ai {
     }
 
     updateKnowledgeBase(row, col) {
-        console.log(row);
-        console.log(col);
+        //console.log(row);
+        //console.log(col);
         this.pathKnowledge[row][col]++;//=this.pathKnowledge[row][col]+1;
         if (this.wholeWorldKnowledge.getRoom(col,row).containsBreeze())
         {
@@ -101,7 +101,7 @@ class Ai {
             this.stenchKnowledge[row][col]=-1;
         }
 
-        console.log("Update breeze for " + row + "and" + col + " : " + this.breezeKnowledge[row][col]);
+        //console.log("Update breeze for " + row + "and" + col + " : " + this.breezeKnowledge[row][col]);
     }
 
     finalMove() {
@@ -140,6 +140,98 @@ class Ai {
 
     handleDeadlockSituation() {
 
+        let unSafeBoxCostArray = [];
+        for (var i = 0; i < this.worldSize; i++) {
+            for (var j = 0; j < this.worldSize; j++) {
+                if (this.breezeKnowledge[i][j]==0)
+                {
+                    let row = i;
+                    let col = j;
+
+                    let numberOfThreats = 0;
+                    let numberOfAvailableBoxes = 0;
+
+                    if (this.isBoxAvailable(row,col+1))
+                    {
+                        numberOfAvailableBoxes++;
+                        if(this.breezeKnowledge[row][col+1]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                        if(this.stenchKnowledge[row][col+1]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                    }
+                    if (this.isBoxAvailable(row+1,col))
+                    {
+                        numberOfAvailableBoxes++;
+                        if(this.breezeKnowledge[row+1][col]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                        if(this.stenchKnowledge[row+1][col]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                    }
+                    if (this.isBoxAvailable(row-1,col))
+                    {
+                        numberOfAvailableBoxes++;
+                        if(this.breezeKnowledge[row-1][col]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                        if(this.stenchKnowledge[row-1][col]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                    }
+                    if (this.isBoxAvailable(row,col-1))
+                    {
+                        numberOfAvailableBoxes++;
+                        if(this.breezeKnowledge[row][col-1]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                        if(this.stenchKnowledge[row][col-1]==1)
+                        {
+                            numberOfThreats++;
+                        }
+                    }
+
+                    let unSafeBox = new Unsafeboxcost (row, col, parseDouble(numberOfThreats/numberOfAvailableBoxes));
+
+                    unSafeBoxCostArray.push(unSafeBox);
+                }
+            }
+        }
+
+        this.calculateBestBoxForDeadlock(unSafeBoxCostArray);
+    }
+
+    calculateBestBoxForDeadlock(unSafeBoxCostArray)
+    {
+        let minimumCost = 999999;
+        let finalBox = unSafeBoxCostArray[0];
+
+        for (var i = 0; i < unSafeBoxCostArray.length; i++) {
+            
+            if (unSafeBoxCostArray[i].cost<minimumCost)
+            {
+                minimumCost = unSafeBoxCostArray[i].cost;
+                finalBox = unSafeBoxCostArray[i];
+            }
+        }
+
+        this.calculateQueueOfMoves(finalBox.row, finalBox.col);
+    }
+
+    calculateQueueOfMoves(row, col)
+    {
+        let arrayOfMoves = [];
+        let currentRow = this.agentRow;
+        let currentCol = this.agentCol;
     }
 
     isMoveSafe(row,col) {
