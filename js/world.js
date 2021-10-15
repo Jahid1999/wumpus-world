@@ -42,7 +42,7 @@ class World {
         //                 [this.roomsPerRow - 1, this.roomsPerRow - 1]]
         //                 [getRandomInt(4)];
         var agentX = 0;
-        var agentY = this.roomsPerRow - 1;
+        var agentY = 0;
         this.agent = new Agent(createVector(agentX, agentY), this);
         this.agent.getCurrentRoom().containsAgent = true;
         for (var dx = -1; dx <= 1; dx++) {

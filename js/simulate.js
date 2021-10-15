@@ -4,11 +4,10 @@ class Simulate {
     }
 
     play() {     
-        var i = 0;  
+        this.world.agent.diretion = 1;
+        isManualMode = false;
        interval = setInterval(()=>{
-            // this.world.agent.right();
-            i = i + 1;
-            console.log("hhe--" + i);
+            this.world.agent.down();
         }, 1000);        
     }
 

@@ -29,6 +29,7 @@ let filesToLoad = 16;
 let bar;
 let cheatMode = false;
 let interval;
+let isManualMode = true;
 
 function loadAssets(callback) {
     wumpus_image = loadImage('assets/textures/wumpus1.png', callback);
@@ -76,6 +77,7 @@ function setup() {
 
 function restart() {
     clearInterval(interval);
+    isManualMode = true;
     wumpusWorld = new World(roomsPerRow, pitPercentage, totalGold);
     flies_sound.stop();
     wind_sound.forEach(sound => {
