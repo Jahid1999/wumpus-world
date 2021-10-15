@@ -16,7 +16,7 @@ class Ai {
         this.stenchKnowledge=[];
         this.breezeKnowledge=[];
         //this.pathKnowledge=[];
-        this.ifUnvisitedSafeBoxBehind=false;
+        this.numberOfUnvisitedSafeBoxBehind=0;
         this.knowledgeBaseInitialization();
     }
 
@@ -43,6 +43,10 @@ class Ai {
             this.breezeKnowledge[0][0]=-1;
             this.stenchKnowledge[0][0]=-1;
         }
+    }
+
+    ifShootWumpus() {
+
     }
 
     getNextMove() {
@@ -102,20 +106,40 @@ class Ai {
 
     finalMove() {
         let bestMove = 0;
+        let bestMoveArray = [];
         let bestMoveCost = 9999999;
         for (var i = 0; i < this.moves.length; i++) {
             console.log("cost: " + this.moves[i]);
             if (this.moves[i]>-1)
             {
+                if (this.moves[i]==0)
+                {
+                    this.numberOfUnvisitedSafeBoxBehind++;
+                }
                 if(this.moves[i]<bestMoveCost)
                 {
-                    bestMove=i;
+                    bestMove = i;
                     bestMoveCost=this.moves[i];
+                }
+            }
+            else
+            {
+                if (this.numberOfUnvisitedSafeBoxBehind==0)
+                {
+                    this.handleDeadlockSituation();
                 }
             }
         }
 
-        return bestMove;
+        this.numberOfUnvisitedSafeBoxBehind--;
+
+        bestMoveArray.push(bestMove); //kahini
+
+        return bestMoveArray;
+    }
+
+    handleDeadlockSituation() {
+
     }
 
     isMoveSafe(row,col) {
