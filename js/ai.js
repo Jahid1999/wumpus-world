@@ -109,7 +109,7 @@ class Ai {
         let bestMoveArray = [];
         let bestMoveCost = 9999999;
         for (var i = 0; i < this.moves.length; i++) {
-            console.log("cost: " + this.moves[i]);
+            //console.log("cost: " + this.moves[i]);
             if (this.moves[i]>-1)
             {
                 if (this.moves[i]==0)
@@ -122,16 +122,18 @@ class Ai {
                     bestMoveCost=this.moves[i];
                 }
             }
-            else
-            {
-                if (this.numberOfUnvisitedSafeBoxBehind==0)
-                {
-                    this.handleDeadlockSituation();
-                }
-            }
         }
 
-        this.numberOfUnvisitedSafeBoxBehind--;
+        if (bestMoveCost==0)
+        {
+            this.numberOfUnvisitedSafeBoxBehind--;
+        }
+        else
+        {
+            // if (this.numberOfUnvisitedSafeBoxBehind==0) {
+            //     this.handleDeadlockSituation();
+            // }
+        }
 
         bestMoveArray.push(bestMove); //kahini
 
@@ -200,7 +202,7 @@ class Ai {
                         }
                     }
 
-                    let unSafeBox = new Unsafeboxcost (row, col, parseDouble(numberOfThreats/numberOfAvailableBoxes));
+                    let unSafeBox = new Unsafeboxcost (row, col, parseFloat(numberOfThreats/numberOfAvailableBoxes));
 
                     unSafeBoxCostArray.push(unSafeBox);
                 }
@@ -212,26 +214,189 @@ class Ai {
 
     calculateBestBoxForDeadlock(unSafeBoxCostArray)
     {
-        let minimumCost = 999999;
+        let maxCost = -10;
         let finalBox = unSafeBoxCostArray[0];
 
         for (var i = 0; i < unSafeBoxCostArray.length; i++) {
             
-            if (unSafeBoxCostArray[i].cost<minimumCost)
+            if (unSafeBoxCostArray[i].cost>maxCost)
             {
-                minimumCost = unSafeBoxCostArray[i].cost;
+                maxCost = unSafeBoxCostArray[i].cost;
                 finalBox = unSafeBoxCostArray[i];
             }
         }
 
-        this.calculateQueueOfMoves(finalBox.row, finalBox.col);
+        let row = finalBox.row;
+        let col = finalBox.col;
+
+        if (this.isBoxAvailable(row+1,col+1)&&this.pathKnowledge[row+1][col+1]==0)
+        {
+            row = row+1;
+            col = col+1;
+        }
+        else if (this.isBoxAvailable(row+1,col-1)&&this.pathKnowledge[row+1][col-1]==0)
+        {
+            row = row+1;
+            col = col-1;
+        }
+        else if (this.isBoxAvailable(row-1,col-1)&&this.pathKnowledge[row-1][col-1]==0)
+        {
+            row = row-1;
+            col = col-1;
+        }
+        else if (this.isBoxAvailable(row-1,col+1)&&this.pathKnowledge[row-1][col+1]==0)
+        {
+            row = row-1;
+            col = col+1;
+        }
+
+        this.calculateQueueOfMoves(row, col);
     }
 
     calculateQueueOfMoves(row, col)
     {
-        let arrayOfMoves = [];
+        let pathMap = [];
+        for (var i = 0; i < this.worldSize; i++) {
+            this.pathMap.push(new Array());
+            for (var j = 0; j < this.worldSize; j++) {
+               if (this.pathKnowledge[i][j]==0)
+               {
+                   pathMap[i][j]=-1;
+               }
+               else
+               {
+                   pathMap[i][j]=0;
+               }
+            }
+        }
+
+        pathMap[row][col]=0;
+
+        let arrayOfMoves = recursion
+
+        /*let queue = [];
+        queue.push([this.agentRow,this.agentCol]);*/
+
+        /*while(queue.length>0)
+        {
+            let currentBox = queue[0];
+            queue.shift();
+           
+            pathMap[currentBox[0]][currentBox[1]] = -1;
+            
+            // Destination is reached. 
+            if (currentBox[0]==row&&currentBox[1]==col)
+                return true;
+
+            if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&this.pathMap[currentBox[0]+1][currentBox[1]]==0)
+            {
+                queue.push([currentBox[0]+1,currentBox[1]]);
+            }
+            if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&this.pathMap[currentBox[0]][currentBox[1]+1]==0)
+            {
+                queue.push([currentBox[0],currentBox[1]+1]);
+            }
+            if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&this.pathMap[currentBox[0]][currentBox[1]-1]==0)
+            {
+                queue.push([currentBox[0],currentBox[1]-1]);
+            }
+            if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&this.pathMap[currentBox[0]-1][currentBox[1]]==0)
+            {
+                queue.push([currentBox[0]-1,currentBox[1]]);
+            }
+        }*/
+
+        recursion (currentBox, pathMap, row, col, arrayOfMoves, move)
+        {
+            pathMap[currentBox[0]][currentBox[1]] = -1;
+            
+            // Destination is reached. 
+            if (currentBox[0]==row&&currentBox[1]==col)
+            {
+                return arrayOfMoves;
+            }
+
+            let a, b, c, d;
+
+            if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&this.pathMap[currentBox[0]+1][currentBox[1]]==0)
+            {
+                a = this.recursion([currentBox[o]+1,currentBox[1]], pathMap, row, col, arrayOfMoves, 2);
+            }
+            if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&this.pathMap[currentBox[0]][currentBox[1]+1]==0)
+            {
+                b= this.recursion([currentBox[o],currentBox[1]+1], pathMap, row, col, arrayOfMoves, 1);
+            }
+            if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&this.pathMap[currentBox[0]][currentBox[1]-1]==0)
+            {
+                c = this.recursion([currentBox[o],currentBox[1]-1], pathMap, row, col, arrayOfMoves, 3);
+            }
+            if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&this.pathMap[currentBox[0]-1][currentBox[1]]==0)
+            {
+                d = this.recursion([currentBox[o]-1,currentBox[1]], pathMap, row, col, arrayOfMoves, 0);
+            }
+
+            if (a!=null)
+            {
+                return a;
+            }
+            else if (b!=null)
+            {
+                return b;
+            }
+            else if (c!=null)
+            {
+                return c;
+            }
+            else if (d!=null)
+            {
+                return d;
+            }
+        }
+
+        
+
+        
+
+
+        /*let arrayOfMoves = [];
         let currentRow = this.agentRow;
         let currentCol = this.agentCol;
+
+        while (currentRow!=row||currentCol!=col)
+        {
+            if(row>currentRow)
+            {
+                if (this.isBoxAvailable(currentRow+1,currentCol)&&this.pathKnowledge[currentRow+1][currentCol]>0)
+                {
+                    arrayOfMoves.push(2);
+                    currentRow++;
+                }
+            }
+            if(col>currentCol)
+            {
+                if (this.isBoxAvailable(currentRow,currentCol+1)&&this.pathKnowledge[currentRow][currentCol+1]>0)
+                {
+                    arrayOfMoves.push(1);
+                    currentCol++;
+                }
+            }
+            if(row<currentRow)
+            {
+                if (this.isBoxAvailable(currentRow-1,currentCol)&&this.pathKnowledge[currentRow-1][currentCol]>0)
+                {
+                    arrayOfMoves.push(0);
+                    currentRow--;
+                }
+            }
+            if(col<currentCol)
+            {
+                if (this.isBoxAvailable(currentRow,currentCol-1)&&this.pathKnowledge[currentRow][currentCol-1]>0)
+                {
+                    arrayOfMoves.push(3);
+                    currentCol--;
+                }
+            }
+        }*/
     }
 
     isMoveSafe(row,col) {
