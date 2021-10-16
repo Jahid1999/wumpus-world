@@ -54,7 +54,7 @@ class Agent {
                     this.world.showRoom(this.position.x, this.position.y);
                 }
             }
-            
+
             else {
                 if (this.direction != 0) {
                     this.direction = 0;
@@ -124,7 +124,7 @@ class Agent {
                 if (this.direction != 3) {
                     this.direction = 3;
                 }
-                if (this.position.x > 0) {
+                else if (this.position.x > 0) {
                     this.position.x--;
                     this.world.showRoom(this.position.x, this.position.y);
                 }
@@ -194,6 +194,15 @@ class Agent {
         var victory = false;
         switch (this.direction){
             case 0:
+                var x = this.position.x;
+                for (var y = this.position.y; y >= 0; y--) {
+                    if (this.world.getRoom(x, y).containsWumpus()) {
+                        victory = true;
+                        break;
+                    }
+                }
+                break;
+            case 1:
                 var y = this.position.y;
                 for (var x = this.position.x; x < roomsPerRow; x++) {
                     if (this.world.getRoom(x, y).containsWumpus()) {
@@ -202,7 +211,7 @@ class Agent {
                     }
                 }
                 break;
-            case 1:
+            case 2:
                 var x = this.position.x;
                 for (var y = this.position.y; y < roomsPerRow; y++) {
                     if (this.world.getRoom(x, y).containsWumpus()) {
@@ -211,18 +220,9 @@ class Agent {
                     }
                 }
                 break;
-            case 2:
+            case 3:
                 var y = this.position.y;
                 for (var x = this.position.x; x >= 0; x--) {
-                    if (this.world.getRoom(x, y).containsWumpus()) {
-                        victory = true;
-                        break;
-                    }
-                }
-                break;
-            case 3:
-                var x = this.position.x;
-                for (var y = this.position.y; y >= 0; y--) {
                     if (this.world.getRoom(x, y).containsWumpus()) {
                         victory = true;
                         break;

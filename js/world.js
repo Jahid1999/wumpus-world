@@ -26,9 +26,9 @@ class World {
     spawnObjects() {
         var availableRooms = []
        
-        for (var dx = 0; dx < this.roomsPerRow; dx++) {
-            for (var dy = 0; dy < this.roomsPerRow; dy++) {
-                availableRooms.push(dx + " " + dy);
+        for (var x = 0; x < this.roomsPerRow; x++) {
+            for (var y = 0; y < this.roomsPerRow; y++) {
+                availableRooms.push(x + " " + y);
             }
         }
         // Spawn agent
@@ -45,10 +45,10 @@ class World {
         var agentY = 0;
         this.agent = new Agent(createVector(agentX, agentY), this);
         this.agent.getCurrentRoom().containsAgent = true;
-        for (var dx = -1; dx <= 1; dx++) {
-            for (var dy = -1; dy <= 1; dy++) {
-                let posX = this.agent.position.x + dx;
-                let posY = this.agent.position.y + dy;
+        for (var x = -1; x <= 1; x++) {
+            for (var y = -1; y <= 1; y++) {
+                let posX = this.agent.position.x + x;
+                let posY = this.agent.position.y + y;
                 if (posX >= 0 || posX < this.roomsPerRow || posY >= 0 || posY < this.roomsPerRow) {
                     availableRooms.splice(availableRooms.indexOf(posX + " " + posY), 1);
                 }
@@ -63,13 +63,13 @@ class World {
         this.wumpus = new Wumpus(createVector(wumpusX, wumpusY), this);
         this.getRoom(wumpusX, wumpusY).addObject(this.wumpus);
         this.getRoom(wumpusX, wumpusY).addAttribute("Wumpus");
-        for (var dx = -1; dx <= 1; dx++) {
-            for (var dy = -1; dy <= 1; dy++) {
-                if ((dx != 0 || dy != 0) && Math.abs(dx) + Math.abs(dy) < 2) {
-                    if (this.getRoom(wumpusX + dx, wumpusY + dy) != null) {
-                        var stench = new Stench(createVector(wumpusX + dx, wumpusY + dy), this);
-                        this.getRoom(wumpusX + dx, wumpusY + dy).addObject(stench);
-                        this.getRoom(wumpusX + dx, wumpusY + dy).addAttribute("Stench");
+        for (var x = -1; x <= 1; x++) {
+            for (var y = -1; y <= 1; y++) {
+                if ((x != 0 || y != 0) && Math.abs(x) + Math.abs(y) < 2) {
+                    if (this.getRoom(wumpusX + x, wumpusY + y) != null) {
+                        var stench = new Stench(createVector(wumpusX + x, wumpusY + y), this);
+                        this.getRoom(wumpusX + x, wumpusY + y).addObject(stench);
+                        this.getRoom(wumpusX + x, wumpusY + y).addAttribute("Stench");
                     }
                 }
             }
@@ -95,15 +95,15 @@ class World {
             this.getRoom(pitX, pitY).addObject(new Pit(createVector(pitX, pitY), this));
             this.getRoom(pitX, pitY).addAttribute("Pit");
         
-            for (var dx = -1; dx <= 1; dx++) {
-                for (var dy = -1; dy <= 1; dy++) {
-                    if ((dx != 0 || dy != 0) && Math.abs(dx) + Math.abs(dy) < 2) {
-                        if (this.getRoom(pitX + dx, pitY + dy) != null) {
-                            if(!this.getRoom(pitX + dx, pitY + dy).attributes.has("Pit")){
-                                var breeze = new Breeze(createVector(pitX + dx, pitY + dy), this);
-                                this.getRoom(pitX + dx, pitY + dy).addObject(breeze);
+            for (var x = -1; x <= 1; x++) {
+                for (var y = -1; y <= 1; y++) {
+                    if ((x != 0 || y != 0) && Math.abs(x) + Math.abs(y) < 2) {
+                        if (this.getRoom(pitX + x, pitY + y) != null) {
+                            if(!this.getRoom(pitX + x, pitY + y).attributes.has("Pit")){
+                                var breeze = new Breeze(createVector(pitX + x, pitY + y), this);
+                                this.getRoom(pitX + x, pitY + y).addObject(breeze);
                             }
-                            this.getRoom(pitX + dx, pitY + dy).addAttribute("Breeze");
+                            this.getRoom(pitX + x, pitY + y).addAttribute("Breeze");
                         }
                     }
                 }
