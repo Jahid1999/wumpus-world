@@ -76,6 +76,14 @@ class Room {
         return result;
     }
 
+    containsBreeze() {
+        return this.attributes.has("Breeze");
+    }
+
+    containsStench() {
+        return this.attributes.has("Stench");
+    }
+
     display() {
         strokeWeight(1);
         stroke(30);
