@@ -80,6 +80,7 @@ function setup() {
 function restart() {
     clearInterval(interval);
     isManualMode = true;
+    cheatMode=false;
     wumpusWorld = new World(roomsPerRow, pitPercentage, totalGold);
     flies_sound.stop();
     wind_sound.forEach(sound => {
