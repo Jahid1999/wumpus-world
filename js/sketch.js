@@ -43,7 +43,7 @@ function loadAssets(callback) {
     agent_right_image = loadImage('assets/textures/agent_right1.png', callback);
     arrow_overlay_image = loadImage('assets/textures/arrow_overlay.png', callback)
     pit_image = loadImage('assets/textures/pit1.png', callback);
-    terrain_image = loadImage('assets/textures/hell3.jpg', callback);
+    terrain_image = loadImage('assets/textures/bg.jpg', callback);
     bell_sound = loadSound('assets/sounds/bell.wav', callback);
     victory_sound = loadSound('assets/sounds/victory.wav', callback);
     defeat_sound = loadSound('assets/sounds/lose.wav', callback);
