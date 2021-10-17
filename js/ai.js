@@ -454,6 +454,12 @@ class Ai {
             }
         }
 
+        if (flag==true&&unSafeBoxCostArray.length>1)
+        {
+            unSafeBoxCostArray.splice(unSafeBoxCostArray.indexOf(finalBox), 1);
+            return this.calculateBestBoxForDeadlock(unSafeBoxCostArray);
+        }
+
         let arrayOfMoves = this.calculateQueueOfMoves(row, col);
 
         this.deadlockBreakingBoxRow=row;
