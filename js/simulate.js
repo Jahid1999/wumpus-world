@@ -7,7 +7,7 @@ class Simulate {
         isManualMode = false;
         var ai = new Ai (this.world);
         let nextMoveArray = [];
-        setInterval(()=>{
+        interval = setInterval(()=>{
             if (nextMoveArray.length==0)
             {
                 nextMoveArray = ai.getNextMove();
@@ -31,6 +31,7 @@ class Simulate {
             }
 
             nextMoveArray.shift();
-        }, 2000);        
+
+        }, 1000);        
     }
 }
