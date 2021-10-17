@@ -24,8 +24,8 @@ h1, label {
 }
 
 #wumpus-world-canvas {
-    max-width: 750px;
-    max-height: 750px;
+    max-width: 850px;
+    max-height: 850px;
     width: 100% !important;
     height: auto !important;
 }

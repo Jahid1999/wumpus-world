@@ -150,7 +150,7 @@ function getRandomInt(max) {
 }
 
 function cheat() {
-    // cheatMode = ! cheatMode;
+    cheatMode = ! cheatMode;
     if(cheatMode) {
         wumpusWorld.showAllRooms();
     }

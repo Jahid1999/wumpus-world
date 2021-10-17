@@ -37,10 +37,6 @@ $(document).on('input', '#world-auto-increment', function () {
     worldAutoIncrement = $('#world-auto-increment').is(':checked');
 });
 
-$(document).on('input', '#cheat-mode', function () {
-    cheatMode = $('#cheat-mode').is(':checked');
-    cheat();
-});
 
 function updateVolume() {
     var volumePercent = $('#volume-slider').val();
