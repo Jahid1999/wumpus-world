@@ -687,7 +687,7 @@ class Ai {
                     }
                     else
                     {
-                        console.log("Dhukechi");
+                        //console.log("Dhukechi");
                         this.moves[i]=-1;
                     }
                 }
