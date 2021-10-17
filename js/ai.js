@@ -1,5 +1,3 @@
-//var List = require("collections/list");
-
 class Ai {
 
     constructor(wholeWorldKnowledge) {
@@ -10,27 +8,27 @@ class Ai {
         this.agentCol=0;
         this.pathKnowledge=[];
         this.pathKnowledgeInitialization();
-        //console.log(this.pathKnowledge[1][1]);
         this.moves=[0,0,0,0];
-        //this.knowledgeBase=new KnowledgeBase();
         this.stenchKnowledge=[];
         this.breezeKnowledge=[];
-        //this.pathKnowledge=[];
-        this.numberOfUnvisitedSafeBoxBehind=0;
         this.knowledgeBaseInitialization();
-        this.deadlockBreakingBoxRow;
-        this.deadlockBreakingBoxCol;
-        this.unvisitedSafeBoxMap=[];
-        this.unvisitedSafeBoxMapInitialization();
+        this.deadlockBreakingBoxRow=0;
+        this.deadlockBreakingBoxCol=0;
+        this.safeBoxMap=[];
+        this.safeBoxMapInitialization();
+        this.wumpusAlive = true;
+        this.killWumpus = false;
     }
 
-    unvisitedSafeBoxMapInitialization() {
+    safeBoxMapInitialization() {
         for (var i = 0; i < this.worldSize; i++) {
-            this.unvisitedSafeBoxMap.push(new Array());
+            this.safeBoxMap.push(new Array());
             for (var j = 0; j < this.worldSize; j++) {
-               this.unvisitedSafeBoxMap[i].push(0);
+               this.safeBoxMap[i].push(-1);
             }
         }
+
+        this.safeBoxMap[0][0]=1;
     }
 
     pathKnowledgeInitialization() {
@@ -40,8 +38,8 @@ class Ai {
             for (var j = 0; j < this.worldSize; j++) {
                this.pathKnowledge[i].push(0);
             }
-            this.pathKnowledge[0][0]=1;
         }
+        this.pathKnowledge[0][0]=1;
     }
 
     knowledgeBaseInitialization() {
@@ -53,19 +51,153 @@ class Ai {
                 this.breezeKnowledge[i].push(0);
                 this.stenchKnowledge[i].push(0);
             }
-            this.breezeKnowledge[0][0]=-1;
-            this.stenchKnowledge[0][0]=-1;
         }
+        this.breezeKnowledge[0][0]=-1;
+        this.stenchKnowledge[0][0]=-1;
     }
 
     ifShootWumpus() {
+        let stenchCounter = 0;
+        let numberOfAvailableBoxes = 0;
+        let stenchData = [];
+        for (var i = 0; i < this.worldSize; i++) {
+            for (var j = 0; j < this.worldSize; j++) {
+                stenchCounter=0;
+                numberOfAvailableBoxes = 0;
+                if (this.isBoxAvailable(i+1,j))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i+1][j]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i+1][j]==-1)
+                    {
+                        continue;
+                    }
+                }
+                if (this.isBoxAvailable(i-1,j))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i-1][j]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i-1][j]==-1)
+                    {
+                        continue;
+                    }
+                }
+                if (this.isBoxAvailable(i,j+1))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i][j+1]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i][j+1]==-1)
+                    {
+                        continue;
+                    }
+                }
+                if (this.isBoxAvailable(i,j-1))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i][j-1]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i][j-1]==-1)
+                    {
+                        continue;
+                    }
+                }
 
+                let wumpusBox = new Unsafeboxcost (i, j, parseFloat(stenchCounter/numberOfAvailableBoxes));
+
+                stenchData.push(wumpusBox);
+            }
+        }
+
+        console.log(stenchData);
+
+        let maxCost = -10;
+        let finalBox = stenchData[0];
+        
+        for (var i = 0; i < stenchData.length; i++) {
+            if (stenchData[i].cost>maxCost)
+            {
+                maxCost = stenchData[i].cost;
+                finalBox = stenchData[i];
+            }
+        }
+
+        let row = finalBox.row;
+        let col = finalBox.col;
+
+        if (finalBox.cost==0)
+        {
+            return [-1,-1];
+        }
+        else
+        {
+            return [row,col];
+        }
+    }
+
+    handleWumpusKilling(nextMoveArray) {
+        let wumpusBox = this.ifShootWumpus();
+        if (!(wumpusBox[0]==-1||wumpusBox[1]==-1))
+        {
+            console.log("Wumpus Killing");
+            let row = wumpusBox[0];
+            let col = wumpusBox[1];
+
+            nextMoveArray = [];
+
+            nextMoveArray = this.calculateQueueOfMoves(row, col);
+
+            this.deadlockBreakingBoxRow = row;
+            this.deadlockBreakingBoxCol = col;
+
+            this.updateStenchAfterKillingWumpus(row, col);
+
+            this.killWumpus = true;
+
+            return nextMoveArray;
+        }
+
+        return nextMoveArray;
+    }
+
+    updateStenchAfterKillingWumpus(row, col) {
+      
+        if (this.wholeWorldKnowledge.getRoom(col,row).containsWumpus())
+        {
+            if (this.isBoxAvailable(row,col+1))
+            {
+                this.stenchKnowledge[row][col+1]=-1;
+            }
+            if (this.isBoxAvailable(row+1,col))
+            {
+                this.stenchKnowledge[row+1][col]=-1;
+            }     
+            if (this.isBoxAvailable(row-1,col))
+            {
+                this.stenchKnowledge[row-1][col]=-1;
+            }        
+            if (this.isBoxAvailable(row,col-1))
+            {
+                this.stenchKnowledge[row][col-1]=-1;
+            }
+
+            this.wumpusAlive = false;
+        }
     }
 
     getNextMove() {
 
-        console.log(this.moves);
-        //.log("Current block cost: " + this.pathKnowledge[this.agentRow][this.agentCol]);
+        //console.log(this.moves);
         this.calculateAvailableMoves();
         this.calculateSafeMoves();
         let nextMoveArray = this.finalMove();
@@ -88,7 +220,7 @@ class Ai {
             if(nextMoveArray[0]==2)
             {
                 console.log("DOWN");
-                this.updateKnowledgeBase(this.agentRow+1,this.agentCol);//kahini
+                this.updateKnowledgeBase(this.agentRow+1,this.agentCol);
                 this.agentRow=this.agentRow+1;
             }
             if(nextMoveArray[0]==3)
@@ -100,12 +232,14 @@ class Ai {
         }
         else
         {
+            nextMoveArray = this.handleWumpusKilling(nextMoveArray);
             console.log("Deadlock Move: ");
             this.updateKnowledgeBase(this.deadlockBreakingBoxRow, this.deadlockBreakingBoxCol);
             this.agentRow=this.deadlockBreakingBoxRow;
             this.agentCol=this.deadlockBreakingBoxCol;
         }
-        //console.log(nextMove);
+
+        this.safeBoxMap[this.agentRow][this.agentCol]=1;
         
         this.moves=[0,0,0,0];
         return nextMoveArray;
@@ -114,7 +248,7 @@ class Ai {
     updateKnowledgeBase(row, col) {
         console.log(row);
         console.log(col);
-        this.pathKnowledge[row][col]++;//=this.pathKnowledge[row][col]+1;
+        this.pathKnowledge[row][col]++;
         if (this.wholeWorldKnowledge.getRoom(col,row).containsBreeze())
         {
             this.breezeKnowledge[row][col]=1;
@@ -124,7 +258,7 @@ class Ai {
             this.breezeKnowledge[row][col]=-1;
         }
 
-        if (this.wholeWorldKnowledge.getRoom(col,row).containsStench())
+        if (this.wholeWorldKnowledge.getRoom(col,row).containsStench()&&this.wumpusAlive==true)
         {
             this.stenchKnowledge[row][col]=1;
         }
@@ -132,101 +266,60 @@ class Ai {
         {
             this.stenchKnowledge[row][col]=-1;
         }
-
-        //console.log("Update breeze for " + row + "and" + col + " : " + this.breezeKnowledge[row][col]);
     }
-
-    // updatePathKnowledgeForDeadlock(nextMoveArray) {
-    //     for(let i=0; i<nextMoveArray.length; i++)
-    //     {
-    //         if(nextMoveArray[i]==0)
-    //         {
-    //             this.pathKnowledge
-    //         }
-    //         if(nextMoveArray[i]==1)
-    //         {
-    //             this.updateKnowledgeBase(this.agentRow,this.agentCol+1);
-    //             this.agentCol=this.agentCol+1;
-    //         }
-    //         if(nextMoveArray[i]==2)
-    //         {
-    //             this.updateKnowledgeBase(this.agentRow+1,this.agentCol);
-    //             this.agentRow=this.agentRow+1;
-    //         }
-    //         if(nextMoveArray[i]==3)
-    //         {
-    //             this.updateKnowledgeBase(this.agentRow,this.agentCol-1);
-    //             this.agentCol=this.agentCol-1;
-    //         }
-    //     }
-    // }
 
     isDeadlock()
     {
-        let deadlockKnowledge = [];
-
-        for (var i = 0; i < this.worldSize; i++) {
-            deadlockKnowledge.push(new Array());
-            for (var j = 0; j < this.worldSize; j++) {
-               deadlockKnowledge[i].push(0);
-            }
-        }
-
-        for (var i = 0; i < this.worldSize; i++) {
-            for (var j = 0; j < this.worldSize; j++) {
-                if (this.breezeKnowledge[i][j]==1||this.stenchKnowledge[i][j]==1)
-                {
-                    deadlockKnowledge[i][j]=-1;
-                }
-            }
-        }
-
-        for (var i = 0; i < this.worldSize; i++) {
-            for (var j = 0; j < this.worldSize; j++) {
-                if (this.pathKnowledge[i][j]==0)
-                {
-                    return !this.isPathAvailable(i, j, deadlockKnowledge);
-                }
-            }
-        }
-    }
-
-    isPathAvailable(row, col, pathMap) {
-        
-        let queue = [];
-        queue.push([this.agentRow,this.agentCol]);
-
-        while(queue.length>0)
+        let flagForDeadlock = true;
+        for (let i=0; i<this.safeBoxMap.length; i++)
         {
-            let currentBox = queue[0];
-            queue.shift();
-           
-            pathMap[currentBox[0]][currentBox[1]] = -1;
-            
-            // Destination is reached. 
-            if (currentBox[0]==row&&currentBox[1]==col)
-                return true;
-
-            if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&pathMap[currentBox[0]+1][currentBox[1]]==0)
+            for (let j=0; j<this.safeBoxMap.length; j++)
             {
-                queue.push([currentBox[0]+1,currentBox[1]]);
-            }
-            if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&pathMap[currentBox[0]][currentBox[1]+1]==0)
-            {
-                queue.push([currentBox[0],currentBox[1]+1]);
-            }
-            if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&pathMap[currentBox[0]][currentBox[1]-1]==0)
-            {
-                queue.push([currentBox[0],currentBox[1]-1]);
-            }
-            if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&pathMap[currentBox[0]-1][currentBox[1]]==0)
-            {
-                queue.push([currentBox[0]-1,currentBox[1]]);
+                if (this.safeBoxMap[i][j]==0)
+                {
+                    flagForDeadlock = false;
+                }
             }
         }
 
-        return false;
+        return flagForDeadlock;
     }
+
+    // isPathAvailable(row, col, pathMap) {
+        
+    //     let queue = [];
+    //     queue.push([this.agentRow,this.agentCol]);
+
+    //     while(queue.length>0)
+    //     {
+    //         let currentBox = queue[0];
+    //         queue.shift();
+           
+    //         pathMap[currentBox[0]][currentBox[1]] = -1;
+            
+    //         if (currentBox[0]==row&&currentBox[1]==col)
+    //             return true;
+
+    //         if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&pathMap[currentBox[0]+1][currentBox[1]]==0)
+    //         {
+    //             queue.push([currentBox[0]+1,currentBox[1]]);
+    //         }
+    //         if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&pathMap[currentBox[0]][currentBox[1]+1]==0)
+    //         {
+    //             queue.push([currentBox[0],currentBox[1]+1]);
+    //         }
+    //         if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&pathMap[currentBox[0]][currentBox[1]-1]==0)
+    //         {
+    //             queue.push([currentBox[0],currentBox[1]-1]);
+    //         }
+    //         if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&pathMap[currentBox[0]-1][currentBox[1]]==0)
+    //         {
+    //             queue.push([currentBox[0]-1,currentBox[1]]);
+    //         }
+    //     }
+
+    //     return false;
+    // }
 
     finalMove() {
         let bestMove = 0;
@@ -234,18 +327,12 @@ class Ai {
         let bestMoveCost = 9999999;
         console.log(this.moves);
         for (var i = 0; i < this.moves.length; i++) {
-            //console.log("cost: " + this.moves[i]);
             if (this.moves[i]>-1)
             {
-                // if (this.moves[i]==0&&this.pathKnowledge[this.agentRow][this.agentCol]==1)
-                // {
-                //     this.numberOfUnvisitedSafeBoxBehind++;
-                // }
                 if(this.moves[i]<bestMoveCost)
                 {
                     bestMove = i;
                     bestMoveCost=this.moves[i];
-                    //console.log("Best Move Cost: " + bestMoveCost);
                 }
             }
         }
@@ -255,48 +342,37 @@ class Ai {
             console.log("DEADLOCK DETECTED!!!!!!!")
             bestMoveArray = this.handleDeadlockSituation();
         }
+        // else if (bestMoveCost>0)
+        // {
+        //     let minimumDistance = 99999;
+        //     let minRow;
+        //     let minCol;
+        //     for (var i = 0; i < this.worldSize; i++) {
+        //         for (var j = 0; j < this.worldSize; j++) {
+        //            if (this.safeBoxMap[i][j]==0)
+        //            {
+        //                if ((((this.agentRow-i)*(this.agentRow-i))+((this.agentCol-j)*(this.agentCol-j)))<minimumDistance)
+        //                {
+        //                    minimumDistance = ((this.agentRow-i)*(this.agentRow-i))+((this.agentCol-j)*(this.agentCol-j));
+        //                    minRow = i;
+        //                    minCol = j;
+        //                }
+        //            }
+        //         }
+        //     }
+
+        //     console.log("Min: " + minRow + ", " + minCol);
+
+        //     bestMoveArray = this.calculateQueueOfMoves(minRow, minCol);
+        // }
         else
         {
             bestMoveArray.push(bestMove);
         }
 
-        // if (this.numberOfUnvisitedSafeBoxBehind>0)
-        // {
-        //     if (bestMoveCost==0)
-        //     {
-        //         // if (bestMove==0)
-        //         // {
-        //         //     this.unvisitedSafeBoxMap[this.agentRow-1][this.agentCol]=0;
-        //         // }
-        //         // else if (bestMove==1)
-        //         // {
-        //         //     this.unvisitedSafeBoxMap[this.agentRow][this.agentCol+1]=0;
-        //         // }
-        //         // else if (bestMove==2)
-        //         // {
-        //         //     this.unvisitedSafeBoxMap[this.agentRow+1][this.agentCol]=0;
-        //         // }
-        //         // else if (bestMove==3)
-        //         // {
-        //         //     this.unvisitedSafeBoxMap[this.agentRow][this.agentCol-1]=0;
-        //         // }
-        //         //this.numberOfUnvisitedSafeBoxBehind--;
-        //         bestMoveArray.push(bestMove);
-        //     }
-        //     else
-        //     {
-        //         bestMoveArray.push(bestMove);
-        //     }
-        // }
-        // else
-        // {
-        //     bestMoveArray = this.handleDeadlockSituation();
-        // }
-
-        //console.log("Number of safe box behind: " + this.numberOfUnvisitedSafeBoxBehind);
-
         return bestMoveArray;
     }
+
     handleDeadlockSituation() {
 
         let unSafeBoxCostArray = [];
@@ -315,11 +391,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row][col+1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row][col+1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
                     if (this.isBoxAvailable(row+1,col))
@@ -327,11 +403,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row+1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row+1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
                     if (this.isBoxAvailable(row-1,col))
@@ -339,11 +415,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row-1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row-1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
                     if (this.isBoxAvailable(row,col-1))
@@ -351,11 +427,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row][col-1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row][col-1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
 
@@ -492,41 +568,9 @@ class Ai {
 
         arrayOfMoves.shift();
 
-        console.log("Final array of moves: " + arrayOfMoves);
+        //console.log("Final array of moves: " + arrayOfMoves);
 
         return arrayOfMoves;
-
-        /*let queue = [];
-        queue.push([this.agentRow,this.agentCol]);*/
-
-        /*while(queue.length>0)
-        {
-            let currentBox = queue[0];
-            queue.shift();
-           
-            pathMap[currentBox[0]][currentBox[1]] = -1;
-            
-            // Destination is reached. 
-            if (currentBox[0]==row&&currentBox[1]==col)
-                return true;
-
-            if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&this.pathMap[currentBox[0]+1][currentBox[1]]==0)
-            {
-                queue.push([currentBox[0]+1,currentBox[1]]);
-            }
-            if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&this.pathMap[currentBox[0]][currentBox[1]+1]==0)
-            {
-                queue.push([currentBox[0],currentBox[1]+1]);
-            }
-            if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&this.pathMap[currentBox[0]][currentBox[1]-1]==0)
-            {
-                queue.push([currentBox[0],currentBox[1]-1]);
-            }
-            if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&this.pathMap[currentBox[0]-1][currentBox[1]]==0)
-            {
-                queue.push([currentBox[0]-1,currentBox[1]]);
-            }
-        }*/
     }
 
     recursion (currentBox, pathMap, row, col, arrayOfMoves, move)
@@ -534,9 +578,8 @@ class Ai {
         pathMap[currentBox[0]][currentBox[1]] = -1;
         arrayOfMoves.push(move);
         
-        console.log("Array: " + arrayOfMoves);
-
-        // Destination is reached. 
+        //console.log("Array: " + arrayOfMoves);
+ 
         if (currentBox[0]==row&&currentBox[1]==col)
         {
             return arrayOfMoves;
@@ -585,7 +628,7 @@ class Ai {
 
     isMoveSafe(row,col) {
         
-        if (row==0&&col==0)
+        if (row==this.deadlockBreakingBoxRow&&col==this.deadlockBreakingBoxCol)
         {
             return true;
         }
@@ -639,10 +682,10 @@ class Ai {
                     if (this.isMoveSafe(this.agentRow-1,this.agentCol)==true)
                     {
                         this.moves[i]=this.pathKnowledge[this.agentRow-1][this.agentCol];
-                        // if (this.moves[i]==0)
-                        // {
-                        //     this.unvisitedSafeBoxMap[this.agentRow-1][this.agentCol]=1;
-                        // }
+                        if (this.moves[i]==0)
+                        {
+                            this.safeBoxMap[this.agentRow-1][this.agentCol]=0;
+                        }
                     }
                     else
                     {
@@ -654,10 +697,10 @@ class Ai {
                     if (this.isMoveSafe(this.agentRow,this.agentCol+1)==true)
                     {
                         this.moves[i]=this.pathKnowledge[this.agentRow][this.agentCol + 1];
-                        // if (this.moves[i]==0)
-                        // {
-                        //     this.unvisitedSafeBoxMap[this.agentRow][this.agentCol+1]=1;
-                        // }
+                        if (this.moves[i]==0)
+                        {
+                            this.safeBoxMap[this.agentRow][this.agentCol+1]=0;
+                        }
                     }
                     else
                     {
@@ -669,10 +712,10 @@ class Ai {
                     if (this.isMoveSafe(this.agentRow+1,this.agentCol)==true)
                     {
                         this.moves[i]=this.pathKnowledge[this.agentRow+1][this.agentCol];
-                        // if (this.moves[i]==0)
-                        // {
-                        //     this.unvisitedSafeBoxMap[this.agentRow+1][this.agentCol]=1;
-                        // }
+                        if (this.moves[i]==0)
+                        {
+                            this.safeBoxMap[this.agentRow+1][this.agentCol]=0;
+                        }
                     }
                     else
                     {
@@ -681,18 +724,16 @@ class Ai {
                 }
                 if (i==3)
                 {
-                    //console.log(this.agentRow+", "+this.agentCol-1);
                     if (this.isMoveSafe(this.agentRow,this.agentCol-1)==true)
                     {
                         this.moves[i]=this.pathKnowledge[this.agentRow][this.agentCol-1];
-                        // if (this.moves[i]==0)
-                        // {
-                        //     this.unvisitedSafeBoxMap[this.agentRow][this.agentCol-1]=1;
-                        // }
+                        if (this.moves[i]==0)
+                        {
+                            this.safeBoxMap[this.agentRow][this.agentCol-1]=0;
+                        }
                     }
                     else
                     {
-                        //console.log("Dhukechi");
                         this.moves[i]=-1;
                     }
                 }
