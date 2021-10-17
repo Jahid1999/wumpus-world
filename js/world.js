@@ -105,8 +105,8 @@ class World {
             }
         }
         else {
-            var wumpusX = 5;
-            var wumpusY = 4;
+            var wumpusX = 4;
+            var wumpusY = 9;
             this.wumpus = new Wumpus(createVector(wumpusX, wumpusY), this);
             this.getRoom(wumpusX, wumpusY).addObject(this.wumpus);
             this.getRoom(wumpusX, wumpusY).addAttribute("Wumpus");
@@ -123,16 +123,17 @@ class World {
             }
 
             //Add Gold
-            for(var i=0; i< this.totalGold; i++) {
-                var goldX = 6;
-                var goldY = 7;
+            var golds = [[9,4],[0,7]];
+            for(var i=0; i< golds.length; i++) {
+                var goldX = golds[i][0];
+                var goldY = golds[i][1];
                 this.gold = new Gold(createVector(goldX, goldY), this);
                 this.getRoom(goldX, goldY).addObject(this.gold);
                 this.getRoom(goldX, goldY).addAttribute("Glitter");
             }
         
             // Add Pits
-            var pits = [[3,1],[0,4],[4,8]];
+            var pits = [[1,2],[3,3],[5,2],[5,3],[6,0],[7,1],[8,1],[7,4],[8,6],[2,7],[5,5]];
             for (var i = 0; i < pits.length; i++) {
                 var pitX = pits[i][0];
                 var pitY = pits[i][1];
