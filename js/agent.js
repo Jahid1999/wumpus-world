@@ -173,15 +173,27 @@ class Agent {
 
     checkWin() {
         if(this.collectedGold == this.world.totalGold) {
+            clearInterval(interval);
             setTimeout(() => {
                 console.log("Victory!");
                 victory_sound.play();
                 this.world.showAllRooms();
+                Swal.fire({
+                    title: 'Win!',
+                    text: 'Congratulations!!',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+                  }).then((result) => {  
+                    if (result.isConfirmed) {    
+                        restart();
+                    }
+                });
             }, 1000);
         }
     }
 
     kill() {
+        clearInterval(interval);
         this.alive = false;
         defeat_sound.play();
         console.log("You died. Game over!")
@@ -232,8 +244,8 @@ class Agent {
         }
         if (victory) {
             this.world.wumpus.kill();
-            console.log("Victory!");
-            victory_sound.play();
+            // console.log("Victory!");
+            // victory_sound.play();
             this.world.showAllRooms();
             if (worldAutoIncrement) {
                 setWorldSize(parseInt(roomsPerRow) + 1);

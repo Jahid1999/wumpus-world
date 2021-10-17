@@ -297,7 +297,6 @@ class Ai {
 
         return bestMoveArray;
     }
-
     handleDeadlockSituation() {
 
         let unSafeBoxCostArray = [];
