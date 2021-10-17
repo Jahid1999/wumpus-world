@@ -179,6 +179,7 @@ class Agent {
                 victory_sound.play();
                 this.world.showAllRooms();
                 Swal.fire({
+                    position:'center-start',
                     title: 'Win!',
                     text: `Congratulations!! You won! You have collected ${this.collectedGold} gold(s).`,
                     icon: 'success',
@@ -197,6 +198,7 @@ class Agent {
         this.alive = false;
         defeat_sound.play();
         Swal.fire({
+            position:'center-start',
             title: 'Lose!',
             text: `Alas!! You lost!\nYou have collected ${this.collectedGold} gold(s).`,
             icon: 'error',
