@@ -45,6 +45,7 @@ class Agent {
 
     up() {
         if (this.alive) {
+            numOfSteps +=1;
             if(isManualMode) {
                 if (this.direction != 0) {
                     this.direction = 0;
@@ -70,6 +71,7 @@ class Agent {
 
     right() {
         if (this.alive) {
+            numOfSteps +=1;
             if(isManualMode) {
                 if (this.direction != 1) {
                     this.direction = 1;
@@ -95,6 +97,7 @@ class Agent {
 
     down() {
         if (this.alive) {
+            numOfSteps +=1;
             if(isManualMode) {
                 if (this.direction != 2) {
                     this.direction = 2;
@@ -120,6 +123,7 @@ class Agent {
 
     left() {
         if (this.alive) {
+            numOfSteps +=1;
             if(isManualMode) {
                 if (this.direction != 3) {
                     this.direction = 3;
@@ -152,7 +156,8 @@ class Agent {
             this.kill();
         } else if (this.world.getRoom(this.position.x, this.position.y).containsGold()) {
             this.collectedGold += 1;
-            goldCollected +=1;
+            goldCollected +=1000;
+
             this.world.getRoom(this.position.x, this.position.y).objects.forEach(obj => {
                 if (obj instanceof Gold) {
                     setTimeout(() => {
@@ -178,10 +183,13 @@ class Agent {
                 console.log("Victory!");
                 victory_sound.play();
                 this.world.showAllRooms();
+                totalScore = goldCollected + (numOfSteps*(-1)) + dead + arrowUsed;
                 Swal.fire({
                     position:'center-start',
                     title: 'Win!',
-                    text: `Congratulations!! You won! You have collected ${this.collectedGold} gold(s).`,
+                    html: `<b>Congratulations!! You Won! </b><hr> <b>Result</b><br> <div style="padding-top:7px">
+                    Gold Collected: ${goldCollected} <br> Steps:  -${numOfSteps} <br> Arrow Used: ${arrowUsed}
+                    <hr> Total Score: ${totalScore} </div>`,
                     icon: 'success',
                     confirmButtonText: 'Restart'
                   }).then((result) => {  
@@ -199,11 +207,16 @@ class Agent {
     kill() {
         clearInterval(interval);
         this.alive = false;
+        dead = -1000;
         defeat_sound.play();
+        totalScore = goldCollected + (numOfSteps*(-1)) + dead + arrowUsed;
         Swal.fire({
             position:'center-start',
             title: 'Lose!',
-            text: `Alas!! You lost!\nYou have collected ${this.collectedGold} gold(s).`,
+            html: `<b>Alas!! You lost! </b><hr> <b>Result</b><br> <div style="padding-top:7px">
+            Dead: ${dead} <br> 
+            Gold Collected: ${goldCollected} <br> Steps:  -${numOfSteps} <br> Arrow Used: ${arrowUsed}
+            <hr> Total Score: ${totalScore} </div>`,
             icon: 'error',
             confirmButtonText: 'Restart'
           }).then((result) => {  
@@ -220,6 +233,7 @@ class Agent {
         if (!this.hasArrow || !this.alive) {
             return;
         }
+        arrowUsed = -10;
         var victory = false;
         switch (this.direction){
             case 0:
