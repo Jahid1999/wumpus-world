@@ -260,6 +260,7 @@ class Agent {
                 break;
         }
         if (victory) {
+            this.world.showRoom(this.world.wumpus.position.x, this.world.wumpus.position.y);
             this.world.wumpus.kill();
             if (worldAutoIncrement) {
                 setWorldSize(parseInt(roomsPerRow) + 1);
