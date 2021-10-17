@@ -32,6 +32,10 @@ let cheatMode = false;
 let interval;
 let isManualMode = true;
 let isFixedBoard = true;
+let totalScore = 0;
+let numOfSteps = 0;
+let arrowUsed = 0;
+let dead = 0;
 
 function loadAssets(callback) {
     wumpus_image = loadImage('assets/textures/wumpus1.png', callback);
