@@ -122,9 +122,9 @@ class Room {
             }
         } 
         else {
-            // image(terrain_image, this.position.x * this.size, this.position.y * this.size, this.size, this.size);
-            // noFill();
-            fill(100);
+            image(cover_image, this.position.x * this.size, this.position.y * this.size, this.size, this.size);
+            noFill();
+            // fill(100);
             square(this.position.x * this.size, this.position.y * this.size, this.size);
         }
 

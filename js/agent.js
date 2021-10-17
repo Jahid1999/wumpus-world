@@ -180,9 +180,9 @@ class Agent {
                 this.world.showAllRooms();
                 Swal.fire({
                     title: 'Win!',
-                    text: 'Congratulations!!',
+                    text: `Congratulations!! You won! You have collected ${this.collectedGold} gold(s).`,
                     icon: 'success',
-                    confirmButtonText: 'Ok'
+                    confirmButtonText: 'Restart'
                   }).then((result) => {  
                     if (result.isConfirmed) {    
                         restart();
@@ -198,7 +198,7 @@ class Agent {
         defeat_sound.play();
         Swal.fire({
             title: 'Lose!',
-            text: 'Alas!! You lost!',
+            text: `Alas!! You lost!\nYou have collected ${this.collectedGold} gold(s).`,
             icon: 'error',
             confirmButtonText: 'Restart'
           }).then((result) => {  

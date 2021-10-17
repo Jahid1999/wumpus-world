@@ -17,6 +17,7 @@ let agent_right_image;
 let agent_walk_sprite_sheet;
 let arrow_overlay_image;
 let terrain_image;
+let cover_image;
 let victory_sound;
 let defeat_sound;
 let bell_sound;
@@ -43,7 +44,8 @@ function loadAssets(callback) {
     agent_right_image = loadImage('assets/textures/agent_right1.png', callback);
     arrow_overlay_image = loadImage('assets/textures/arrow_overlay.png', callback)
     pit_image = loadImage('assets/textures/pit1.png', callback);
-    terrain_image = loadImage('assets/textures/bg.jpg', callback);
+    terrain_image = loadImage('assets/textures/bgg1.jpg', callback);
+    cover_image = loadImage('assets/textures/bg.jpg', callback);
     bell_sound = loadSound('assets/sounds/bell.wav', callback);
     victory_sound = loadSound('assets/sounds/victory.wav', callback);
     defeat_sound = loadSound('assets/sounds/lose.wav', callback);
