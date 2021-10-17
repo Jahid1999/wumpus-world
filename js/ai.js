@@ -285,42 +285,6 @@ class Ai {
         return flagForDeadlock;
     }
 
-    // isPathAvailable(row, col, pathMap) {
-        
-    //     let queue = [];
-    //     queue.push([this.agentRow,this.agentCol]);
-
-    //     while(queue.length>0)
-    //     {
-    //         let currentBox = queue[0];
-    //         queue.shift();
-           
-    //         pathMap[currentBox[0]][currentBox[1]] = -1;
-            
-    //         if (currentBox[0]==row&&currentBox[1]==col)
-    //             return true;
-
-    //         if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&pathMap[currentBox[0]+1][currentBox[1]]==0)
-    //         {
-    //             queue.push([currentBox[0]+1,currentBox[1]]);
-    //         }
-    //         if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&pathMap[currentBox[0]][currentBox[1]+1]==0)
-    //         {
-    //             queue.push([currentBox[0],currentBox[1]+1]);
-    //         }
-    //         if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&pathMap[currentBox[0]][currentBox[1]-1]==0)
-    //         {
-    //             queue.push([currentBox[0],currentBox[1]-1]);
-    //         }
-    //         if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&pathMap[currentBox[0]-1][currentBox[1]]==0)
-    //         {
-    //             queue.push([currentBox[0]-1,currentBox[1]]);
-    //         }
-    //     }
-
-    //     return false;
-    // }
-
     finalMove() {
         let bestMove = 0;
         let bestMoveArray = [];
