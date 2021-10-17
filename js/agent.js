@@ -44,7 +44,7 @@ class Agent {
     }
 
     up() {
-        if (this.alive && this.world.wumpus.alive) {
+        if (this.alive) {
             if(isManualMode) {
                 if (this.direction != 0) {
                     this.direction = 0;
@@ -69,7 +69,7 @@ class Agent {
     }
 
     right() {
-        if (this.alive && this.world.wumpus.alive) {
+        if (this.alive) {
             if(isManualMode) {
                 if (this.direction != 1) {
                     this.direction = 1;
@@ -94,7 +94,7 @@ class Agent {
     }
 
     down() {
-        if (this.alive && this.world.wumpus.alive) {
+        if (this.alive) {
             if(isManualMode) {
                 if (this.direction != 2) {
                     this.direction = 2;
@@ -119,7 +119,7 @@ class Agent {
     }
 
     left() {
-        if (this.alive && this.world.wumpus.alive) {
+        if (this.alive) {
             if(isManualMode) {
                 if (this.direction != 3) {
                     this.direction = 3;
@@ -257,7 +257,7 @@ class Agent {
             this.world.wumpus.kill();
             // console.log("Victory!");
             // victory_sound.play();
-            this.world.showAllRooms();
+            //this.world.showAllRooms();
             if (worldAutoIncrement) {
                 setWorldSize(parseInt(roomsPerRow) + 1);
             }

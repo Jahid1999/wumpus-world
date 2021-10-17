@@ -8,6 +8,12 @@ class Simulate {
         var ai = new Ai (this.world);
         let nextMoveArray = [];
         interval = setInterval(()=>{
+            if (nextMoveArray.length==1&&ai.killWumpus==true)
+            {
+                this.world.agent.direction=nextMoveArray[0];
+                this.world.agent.shoot();
+                ai.killWumpus = false;
+            }
             if (nextMoveArray.length==0)
             {
                 nextMoveArray = ai.getNextMove();

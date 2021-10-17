@@ -12,10 +12,12 @@ class Ai {
         this.stenchKnowledge=[];
         this.breezeKnowledge=[];
         this.knowledgeBaseInitialization();
-        this.deadlockBreakingBoxRow;
-        this.deadlockBreakingBoxCol;
+        this.deadlockBreakingBoxRow=0;
+        this.deadlockBreakingBoxCol=0;
         this.safeBoxMap=[];
         this.safeBoxMapInitialization();
+        this.wumpusAlive = true;
+        this.killWumpus = false;
     }
 
     safeBoxMapInitialization() {
@@ -36,8 +38,8 @@ class Ai {
             for (var j = 0; j < this.worldSize; j++) {
                this.pathKnowledge[i].push(0);
             }
-            this.pathKnowledge[0][0]=1;
         }
+        this.pathKnowledge[0][0]=1;
     }
 
     knowledgeBaseInitialization() {
@@ -49,18 +51,153 @@ class Ai {
                 this.breezeKnowledge[i].push(0);
                 this.stenchKnowledge[i].push(0);
             }
-            this.breezeKnowledge[0][0]=-1;
-            this.stenchKnowledge[0][0]=-1;
         }
+        this.breezeKnowledge[0][0]=-1;
+        this.stenchKnowledge[0][0]=-1;
     }
 
     ifShootWumpus() {
+        let stenchCounter = 0;
+        let numberOfAvailableBoxes = 0;
+        let stenchData = [];
+        for (var i = 0; i < this.worldSize; i++) {
+            for (var j = 0; j < this.worldSize; j++) {
+                stenchCounter=0;
+                numberOfAvailableBoxes = 0;
+                if (this.isBoxAvailable(i+1,j))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i+1][j]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i+1][j]==-1)
+                    {
+                        continue;
+                    }
+                }
+                if (this.isBoxAvailable(i-1,j))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i-1][j]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i-1][j]==-1)
+                    {
+                        continue;
+                    }
+                }
+                if (this.isBoxAvailable(i,j+1))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i][j+1]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i][j+1]==-1)
+                    {
+                        continue;
+                    }
+                }
+                if (this.isBoxAvailable(i,j-1))
+                {
+                    numberOfAvailableBoxes++;
+                    if (this.stenchKnowledge[i][j-1]==1)
+                    {
+                        stenchCounter++;
+                    }
+                    else if (this.stenchKnowledge[i][j-1]==-1)
+                    {
+                        continue;
+                    }
+                }
 
+                let wumpusBox = new Unsafeboxcost (i, j, parseFloat(stenchCounter/numberOfAvailableBoxes));
+
+                stenchData.push(wumpusBox);
+            }
+        }
+
+        console.log(stenchData);
+
+        let maxCost = -10;
+        let finalBox = stenchData[0];
+        
+        for (var i = 0; i < stenchData.length; i++) {
+            if (stenchData[i].cost>maxCost)
+            {
+                maxCost = stenchData[i].cost;
+                finalBox = stenchData[i];
+            }
+        }
+
+        let row = finalBox.row;
+        let col = finalBox.col;
+
+        if (finalBox.cost==0)
+        {
+            return [-1,-1];
+        }
+        else
+        {
+            return [row,col];
+        }
+    }
+
+    handleWumpusKilling(nextMoveArray) {
+        let wumpusBox = this.ifShootWumpus();
+        if (!(wumpusBox[0]==-1||wumpusBox[1]==-1))
+        {
+            console.log("Wumpus Killing");
+            let row = wumpusBox[0];
+            let col = wumpusBox[1];
+
+            nextMoveArray = [];
+
+            nextMoveArray = this.calculateQueueOfMoves(row, col);
+
+            this.deadlockBreakingBoxRow = row;
+            this.deadlockBreakingBoxCol = col;
+
+            this.updateStenchAfterKillingWumpus(row, col);
+
+            this.killWumpus = true;
+
+            return nextMoveArray;
+        }
+
+        return nextMoveArray;
+    }
+
+    updateStenchAfterKillingWumpus(row, col) {
+      
+        if (this.wholeWorldKnowledge.getRoom(col,row).containsWumpus())
+        {
+            if (this.isBoxAvailable(row,col+1))
+            {
+                this.stenchKnowledge[row][col+1]=-1;
+            }
+            if (this.isBoxAvailable(row+1,col))
+            {
+                this.stenchKnowledge[row+1][col]=-1;
+            }     
+            if (this.isBoxAvailable(row-1,col))
+            {
+                this.stenchKnowledge[row-1][col]=-1;
+            }        
+            if (this.isBoxAvailable(row,col-1))
+            {
+                this.stenchKnowledge[row][col-1]=-1;
+            }
+
+            this.wumpusAlive = false;
+        }
     }
 
     getNextMove() {
 
-        console.log(this.moves);
+        //console.log(this.moves);
         this.calculateAvailableMoves();
         this.calculateSafeMoves();
         let nextMoveArray = this.finalMove();
@@ -95,6 +232,7 @@ class Ai {
         }
         else
         {
+            nextMoveArray = this.handleWumpusKilling(nextMoveArray);
             console.log("Deadlock Move: ");
             this.updateKnowledgeBase(this.deadlockBreakingBoxRow, this.deadlockBreakingBoxCol);
             this.agentRow=this.deadlockBreakingBoxRow;
@@ -120,7 +258,7 @@ class Ai {
             this.breezeKnowledge[row][col]=-1;
         }
 
-        if (this.wholeWorldKnowledge.getRoom(col,row).containsStench())
+        if (this.wholeWorldKnowledge.getRoom(col,row).containsStench()&&this.wumpusAlive==true)
         {
             this.stenchKnowledge[row][col]=1;
         }
@@ -145,70 +283,43 @@ class Ai {
         }
 
         return flagForDeadlock;
-
-        // let deadlockKnowledge = [];
-
-        // for (var i = 0; i < this.worldSize; i++) {
-        //     deadlockKnowledge.push(new Array());
-        //     for (var j = 0; j < this.worldSize; j++) {
-        //        deadlockKnowledge[i].push(0);
-        //     }
-        // }
-
-        // for (var i = 0; i < this.worldSize; i++) {
-        //     for (var j = 0; j < this.worldSize; j++) {
-        //         if (this.breezeKnowledge[i][j]==1||this.stenchKnowledge[i][j]==1)
-        //         {
-        //             deadlockKnowledge[i][j]=-1;
-        //         }
-        //     }
-        // }
-
-        // for (var i = 0; i < this.worldSize; i++) {
-        //     for (var j = 0; j < this.worldSize; j++) {
-        //         if (this.pathKnowledge[i][j]==0)
-        //         {
-        //             return !this.isPathAvailable(i, j, deadlockKnowledge);
-        //         }
-        //     }
-        // }
     }
 
-    isPathAvailable(row, col, pathMap) {
+    // isPathAvailable(row, col, pathMap) {
         
-        let queue = [];
-        queue.push([this.agentRow,this.agentCol]);
+    //     let queue = [];
+    //     queue.push([this.agentRow,this.agentCol]);
 
-        while(queue.length>0)
-        {
-            let currentBox = queue[0];
-            queue.shift();
+    //     while(queue.length>0)
+    //     {
+    //         let currentBox = queue[0];
+    //         queue.shift();
            
-            pathMap[currentBox[0]][currentBox[1]] = -1;
+    //         pathMap[currentBox[0]][currentBox[1]] = -1;
             
-            if (currentBox[0]==row&&currentBox[1]==col)
-                return true;
+    //         if (currentBox[0]==row&&currentBox[1]==col)
+    //             return true;
 
-            if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&pathMap[currentBox[0]+1][currentBox[1]]==0)
-            {
-                queue.push([currentBox[0]+1,currentBox[1]]);
-            }
-            if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&pathMap[currentBox[0]][currentBox[1]+1]==0)
-            {
-                queue.push([currentBox[0],currentBox[1]+1]);
-            }
-            if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&pathMap[currentBox[0]][currentBox[1]-1]==0)
-            {
-                queue.push([currentBox[0],currentBox[1]-1]);
-            }
-            if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&pathMap[currentBox[0]-1][currentBox[1]]==0)
-            {
-                queue.push([currentBox[0]-1,currentBox[1]]);
-            }
-        }
+    //         if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&pathMap[currentBox[0]+1][currentBox[1]]==0)
+    //         {
+    //             queue.push([currentBox[0]+1,currentBox[1]]);
+    //         }
+    //         if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&pathMap[currentBox[0]][currentBox[1]+1]==0)
+    //         {
+    //             queue.push([currentBox[0],currentBox[1]+1]);
+    //         }
+    //         if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&pathMap[currentBox[0]][currentBox[1]-1]==0)
+    //         {
+    //             queue.push([currentBox[0],currentBox[1]-1]);
+    //         }
+    //         if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&pathMap[currentBox[0]-1][currentBox[1]]==0)
+    //         {
+    //             queue.push([currentBox[0]-1,currentBox[1]]);
+    //         }
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     finalMove() {
         let bestMove = 0;
@@ -231,6 +342,29 @@ class Ai {
             console.log("DEADLOCK DETECTED!!!!!!!")
             bestMoveArray = this.handleDeadlockSituation();
         }
+        // else if (bestMoveCost>0)
+        // {
+        //     let minimumDistance = 99999;
+        //     let minRow;
+        //     let minCol;
+        //     for (var i = 0; i < this.worldSize; i++) {
+        //         for (var j = 0; j < this.worldSize; j++) {
+        //            if (this.safeBoxMap[i][j]==0)
+        //            {
+        //                if ((((this.agentRow-i)*(this.agentRow-i))+((this.agentCol-j)*(this.agentCol-j)))<minimumDistance)
+        //                {
+        //                    minimumDistance = ((this.agentRow-i)*(this.agentRow-i))+((this.agentCol-j)*(this.agentCol-j));
+        //                    minRow = i;
+        //                    minCol = j;
+        //                }
+        //            }
+        //         }
+        //     }
+
+        //     console.log("Min: " + minRow + ", " + minCol);
+
+        //     bestMoveArray = this.calculateQueueOfMoves(minRow, minCol);
+        // }
         else
         {
             bestMoveArray.push(bestMove);
@@ -238,6 +372,7 @@ class Ai {
 
         return bestMoveArray;
     }
+
     handleDeadlockSituation() {
 
         let unSafeBoxCostArray = [];
@@ -256,11 +391,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row][col+1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row][col+1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
                     if (this.isBoxAvailable(row+1,col))
@@ -268,11 +403,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row+1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row+1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
                     if (this.isBoxAvailable(row-1,col))
@@ -280,11 +415,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row-1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row-1][col]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
                     if (this.isBoxAvailable(row,col-1))
@@ -292,11 +427,11 @@ class Ai {
                         numberOfAvailableBoxes++;
                         if(this.breezeKnowledge[row][col-1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                         if(this.stenchKnowledge[row][col-1]==1)
                         {
-                            numberOfThreats++;
+                            numberOfThreats = (numberOfThreats+1)*(numberOfThreats+1);
                         }
                     }
 
@@ -433,7 +568,7 @@ class Ai {
 
         arrayOfMoves.shift();
 
-        console.log("Final array of moves: " + arrayOfMoves);
+        //console.log("Final array of moves: " + arrayOfMoves);
 
         return arrayOfMoves;
     }
@@ -443,7 +578,7 @@ class Ai {
         pathMap[currentBox[0]][currentBox[1]] = -1;
         arrayOfMoves.push(move);
         
-        console.log("Array: " + arrayOfMoves);
+        //console.log("Array: " + arrayOfMoves);
  
         if (currentBox[0]==row&&currentBox[1]==col)
         {
@@ -493,7 +628,7 @@ class Ai {
 
     isMoveSafe(row,col) {
         
-        if (row==0&&col==0)
+        if (row==this.deadlockBreakingBoxRow&&col==this.deadlockBreakingBoxCol)
         {
             return true;
         }
