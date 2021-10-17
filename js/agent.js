@@ -185,8 +185,11 @@ class Agent {
                     icon: 'success',
                     confirmButtonText: 'Restart'
                   }).then((result) => {  
-                    if (result.isConfirmed) {    
-                        restart();
+                    if (result.isConfirmed) {  
+                        if(isFixedBoard)  
+                            fixedRestart();
+                        else
+                            randomRestart()
                     }
                 });
             }, 1000);
@@ -205,7 +208,10 @@ class Agent {
             confirmButtonText: 'Restart'
           }).then((result) => {  
             if (result.isConfirmed) {    
-                restart();
+                if(isFixedBoard)  
+                fixedRestart();
+                else
+                    randomRestart()
             }
         });
     }
@@ -255,9 +261,6 @@ class Agent {
         }
         if (victory) {
             this.world.wumpus.kill();
-            // console.log("Victory!");
-            // victory_sound.play();
-            //this.world.showAllRooms();
             if (worldAutoIncrement) {
                 setWorldSize(parseInt(roomsPerRow) + 1);
             }

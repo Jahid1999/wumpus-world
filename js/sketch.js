@@ -1,4 +1,4 @@
-let canvasSize = 800;
+let canvasSize = 750;
 let roomsPerRow = 4;
 let pitPercentage = 2;
 let totalGold = 2;
@@ -31,6 +31,7 @@ let bar;
 let cheatMode = false;
 let interval;
 let isManualMode = true;
+let isFixedBoard = true;
 
 function loadAssets(callback) {
     wumpus_image = loadImage('assets/textures/wumpus1.png', callback);
@@ -46,6 +47,7 @@ function loadAssets(callback) {
     pit_image = loadImage('assets/textures/pit1.png', callback);
     terrain_image = loadImage('assets/textures/bgg1.jpg', callback);
     cover_image = loadImage('assets/textures/bg.jpg', callback);
+    // cover_image = createImg('assets/textures/abc.gif', callback);
     bell_sound = loadSound('assets/sounds/bell.wav', callback);
     victory_sound = loadSound('assets/sounds/victory.wav', callback);
     defeat_sound = loadSound('assets/sounds/lose.wav', callback);
@@ -100,6 +102,17 @@ function draw() {
         smooth();
         wumpusWorld.display();
     }
+}
+
+function randomRestart() {
+    isFixedBoard = false;
+    restart();
+    
+}
+
+function fixedRestart() {
+    isFixedBoard = true;
+    restart();    
 }
 
 function keyPressed() {

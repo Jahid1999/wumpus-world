@@ -31,16 +31,8 @@ class World {
                 availableRooms.push(x + " " + y);
             }
         }
-        // Spawn agent
-        // var agentIndex = getRandomInt(availableRooms.length - 1);
-        // var agentIndex = getRandomInt(availableRooms.length - 1);
-        // var agentX = parseInt(availableRooms[agentIndex].split(" ")[0]);
-        // var agentY = parseInt(availableRooms[agentIndex].split(" ")[1]);
-        // var agentPos = [[0, 0], 
-        //                 [0, this.roomsPerRow - 1], 
-        //                 [this.roomsPerRow - 1, 0], 
-        //                 [this.roomsPerRow - 1, this.roomsPerRow - 1]]
-        //                 [getRandomInt(4)];
+        
+        //Add Agent
         var agentX = 0;
         var agentY = 0;
         this.agent = new Agent(createVector(agentX, agentY), this);
@@ -55,68 +47,115 @@ class World {
             }
         }
 
-        // Add Wumpus
-        var wumpusIndex = getRandomInt(availableRooms.length - 1);
-        var wumpusX = parseInt(availableRooms[wumpusIndex].split(" ")[0]);
-        var wumpusY = parseInt(availableRooms[wumpusIndex].split(" ")[1]);
-        availableRooms.splice(wumpusIndex, 1);
-        this.wumpus = new Wumpus(createVector(wumpusX, wumpusY), this);
-        this.getRoom(wumpusX, wumpusY).addObject(this.wumpus);
-        this.getRoom(wumpusX, wumpusY).addAttribute("Wumpus");
-        for (var x = -1; x <= 1; x++) {
-            for (var y = -1; y <= 1; y++) {
-                if ((x != 0 || y != 0) && Math.abs(x) + Math.abs(y) < 2) {
-                    if (this.getRoom(wumpusX + x, wumpusY + y) != null) {
-                        var stench = new Stench(createVector(wumpusX + x, wumpusY + y), this);
-                        this.getRoom(wumpusX + x, wumpusY + y).addObject(stench);
-                        this.getRoom(wumpusX + x, wumpusY + y).addAttribute("Stench");
+
+        if(!isFixedBoard) {
+            // Add Wumpus
+            var wumpusIndex = getRandomInt(availableRooms.length - 1);
+            var wumpusX = parseInt(availableRooms[wumpusIndex].split(" ")[0]);
+            var wumpusY = parseInt(availableRooms[wumpusIndex].split(" ")[1]);
+            availableRooms.splice(wumpusIndex, 1);
+            this.wumpus = new Wumpus(createVector(wumpusX, wumpusY), this);
+            this.getRoom(wumpusX, wumpusY).addObject(this.wumpus);
+            this.getRoom(wumpusX, wumpusY).addAttribute("Wumpus");
+            for (var x = -1; x <= 1; x++) {
+                for (var y = -1; y <= 1; y++) {
+                    if ((x != 0 || y != 0) && Math.abs(x) + Math.abs(y) < 2) {
+                        if (this.getRoom(wumpusX + x, wumpusY + y) != null) {
+                            var stench = new Stench(createVector(wumpusX + x, wumpusY + y), this);
+                            this.getRoom(wumpusX + x, wumpusY + y).addObject(stench);
+                            this.getRoom(wumpusX + x, wumpusY + y).addAttribute("Stench");
+                        }
+                    }
+                }
+            }
+
+            //Add Gold
+            for(var i=0; i< this.totalGold; i++) {
+                var goldIndex = getRandomInt(availableRooms.length);
+                var goldX = parseInt(availableRooms[goldIndex].split(" ")[0]);
+                var goldY = parseInt(availableRooms[goldIndex].split(" ")[1]);
+                availableRooms.splice(goldIndex, 1);
+                this.gold = new Gold(createVector(goldX, goldY), this);
+                this.getRoom(goldX, goldY).addObject(this.gold);
+                this.getRoom(goldX, goldY).addAttribute("Glitter");
+            }
+        
+            // Add Pits
+            for (var i = 0; i < Math.floor((this.roomsPerRow * this.roomsPerRow) * this.pitPercentage); i++) {
+                var pitIndex = getRandomInt(availableRooms.length - 1);
+                var pitX = parseInt(availableRooms[pitIndex].split(" ")[0]);
+                var pitY = parseInt(availableRooms[pitIndex].split(" ")[1]);
+                availableRooms.splice(pitIndex, 1);
+                this.getRoom(pitX, pitY).addObject(new Pit(createVector(pitX, pitY), this));
+                this.getRoom(pitX, pitY).addAttribute("Pit");
+            
+                for (var x = -1; x <= 1; x++) {
+                    for (var y = -1; y <= 1; y++) {
+                        if ((x != 0 || y != 0) && Math.abs(x) + Math.abs(y) < 2) {
+                            if (this.getRoom(pitX + x, pitY + y) != null) {
+                                if(!this.getRoom(pitX + x, pitY + y).attributes.has("Pit")){
+                                    var breeze = new Breeze(createVector(pitX + x, pitY + y), this);
+                                    this.getRoom(pitX + x, pitY + y).addObject(breeze);
+                                }
+                                this.getRoom(pitX + x, pitY + y).addAttribute("Breeze");
+                            }
+                        }
                     }
                 }
             }
         }
-
-        //Add Gold
-        for(var i=0; i< this.totalGold; i++) {
-            var goldIndex = getRandomInt(availableRooms.length);
-            var goldX = parseInt(availableRooms[goldIndex].split(" ")[0]);
-            var goldY = parseInt(availableRooms[goldIndex].split(" ")[1]);
-            availableRooms.splice(goldIndex, 1);
-            this.gold = new Gold(createVector(goldX, goldY), this);
-            this.getRoom(goldX, goldY).addObject(this.gold);
-            this.getRoom(goldX, goldY).addAttribute("Glitter");
-        }
-       
-        // Add Pits
-        for (var i = 0; i < Math.floor((this.roomsPerRow * this.roomsPerRow) * this.pitPercentage); i++) {
-            var pitIndex = getRandomInt(availableRooms.length - 1);
-            var pitX = parseInt(availableRooms[pitIndex].split(" ")[0]);
-            var pitY = parseInt(availableRooms[pitIndex].split(" ")[1]);
-            availableRooms.splice(pitIndex, 1);
-            this.getRoom(pitX, pitY).addObject(new Pit(createVector(pitX, pitY), this));
-            this.getRoom(pitX, pitY).addAttribute("Pit");
-        
+        else {
+            var wumpusX = 5;
+            var wumpusY = 4;
+            this.wumpus = new Wumpus(createVector(wumpusX, wumpusY), this);
+            this.getRoom(wumpusX, wumpusY).addObject(this.wumpus);
+            this.getRoom(wumpusX, wumpusY).addAttribute("Wumpus");
             for (var x = -1; x <= 1; x++) {
                 for (var y = -1; y <= 1; y++) {
                     if ((x != 0 || y != 0) && Math.abs(x) + Math.abs(y) < 2) {
-                        if (this.getRoom(pitX + x, pitY + y) != null) {
-                            if(!this.getRoom(pitX + x, pitY + y).attributes.has("Pit")){
-                                var breeze = new Breeze(createVector(pitX + x, pitY + y), this);
-                                this.getRoom(pitX + x, pitY + y).addObject(breeze);
+                        if (this.getRoom(wumpusX + x, wumpusY + y) != null) {
+                            var stench = new Stench(createVector(wumpusX + x, wumpusY + y), this);
+                            this.getRoom(wumpusX + x, wumpusY + y).addObject(stench);
+                            this.getRoom(wumpusX + x, wumpusY + y).addAttribute("Stench");
+                        }
+                    }
+                }
+            }
+
+            //Add Gold
+            for(var i=0; i< this.totalGold; i++) {
+                var goldX = 6;
+                var goldY = 7;
+                this.gold = new Gold(createVector(goldX, goldY), this);
+                this.getRoom(goldX, goldY).addObject(this.gold);
+                this.getRoom(goldX, goldY).addAttribute("Glitter");
+            }
+        
+            // Add Pits
+            var pits = [[3,1],[0,4],[4,8]];
+            for (var i = 0; i < pits.length; i++) {
+                var pitX = pits[i][0];
+                var pitY = pits[i][1];
+                this.getRoom(pitX, pitY).addObject(new Pit(createVector(pitX, pitY), this));
+                this.getRoom(pitX, pitY).addAttribute("Pit");
+            
+                for (var x = -1; x <= 1; x++) {
+                    for (var y = -1; y <= 1; y++) {
+                        if ((x != 0 || y != 0) && Math.abs(x) + Math.abs(y) < 2) {
+                            if (this.getRoom(pitX + x, pitY + y) != null) {
+                                if(!this.getRoom(pitX + x, pitY + y).attributes.has("Pit")){
+                                    var breeze = new Breeze(createVector(pitX + x, pitY + y), this);
+                                    this.getRoom(pitX + x, pitY + y).addObject(breeze);
+                                }
+                                this.getRoom(pitX + x, pitY + y).addAttribute("Breeze");
                             }
-                            this.getRoom(pitX + x, pitY + y).addAttribute("Breeze");
                         }
                     }
                 }
             }
         }
 
-        // // Spawn arrow
-        // var arrowIndex = getRandomInt(availableRooms.length);
-        // var arrowX = parseInt(availableRooms[arrowIndex].split(" ")[0]);
-        // var arrowY = parseInt(availableRooms[arrowIndex].split(" ")[1]);
-        // availableRooms.splice(arrowIndex, 1);
-        // this.getRoom(arrowX, arrowY).addArrow();
-        // this.arrowPosition = createVector(arrowX, arrowY);
+        
     }
 
     getRoom(x, y) {

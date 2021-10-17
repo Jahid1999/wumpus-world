@@ -82,39 +82,48 @@
 
   <div class="container">
     <div class="sidebar-container">
-      <div class="sidebar">
-        <div class="sidebar-content">
-          <label for="world-size-slider" class="sidebar-label">World size: <span class="world-size-value"></span></label><br>
-          <input type="range" min="6" max="10" value="10" class="slider" id="world-size-slider">
+      <div class="row">
+        <div class="col-4">
+          <div class="sidebar">
+            <div class="sidebar-content">
+              <label for="world-size-slider" class="sidebar-label">World size: <span class="world-size-value"></span></label><br>
+              <input type="range" min="6" max="10" value="10" class="slider" id="world-size-slider">
+            </div>
+    
+            <div class="sidebar-content">
+              <label for="pit-number-slider" class="sidebar-label">Pit Percentage: <span class="pit-number-value"></span></label><br>
+              <input type="range" min="5" max="20" value="10" class="slider" id="pit-number-slider">
+            </div>
+    
+            <div class="sidebar-content">
+              <label for="gold-number-slider" class="sidebar-label">Total Golds: <span class="gold-number-value"></span></label><br>
+              <input type="range" min="1" max="5" value="1" class="slider" id="gold-number-slider">
+            </div>
+          
+            <div class="sidebar-content">
+              <input type="checkbox" id="cheat-mode">
+              <label for="cheat-mode" style="font-family: cursive; color: #00264d; font-weight: bold;">Cheat</label>
+            </div>
+    
+            <button type="button" class="btn btn-success btn-md" onclick="simulate()">Start</button>
+            <button type="button" class="btn btn-info btn-md" onclick="fixedRestart(); this.blur();">Restart</button>
+            <button type="button" class="btn btn-primary btn-md" onclick="randomRestart(); this.blur();">Randomize</button>
+    
+          
+            <div class="sidebar-content" style="opacity: 0;">
+              <label for="volume-slider">Volume: <span class="volume-value"></span></label><br>
+              <input type="range" min="0" max="100" value="50" class="slider" id="volume-slider">
+            </div>
+          </div>
         </div>
-
-        <div class="sidebar-content">
-          <label for="pit-number-slider" class="sidebar-label">Pit Percentage: <span class="pit-number-value"></span></label><br>
-          <input type="range" min="5" max="20" value="10" class="slider" id="pit-number-slider">
-        </div>
-
-        <div class="sidebar-content">
-          <label for="gold-number-slider" class="sidebar-label">Total Golds: <span class="gold-number-value"></span></label><br>
-          <input type="range" min="1" max="5" value="2" class="slider" id="gold-number-slider">
-        </div>
-      
-        <div class="sidebar-content">
-          <input type="checkbox" id="cheat-mode">
-          <label for="cheat-mode" style="font-family: cursive; color: #00264d; font-weight: bold;">Cheat</label>
-        </div>
-
-        <button type="button" class="btn btn-success btn-lg" onclick="simulate()">Start</button>
-        <button type="button" class="btn btn-info btn-lg" onclick="restart(); this.blur();">Restart</button>
-
-      
-        <div class="sidebar-content" style="opacity: 0;">
-          <label for="volume-slider">Volume: <span class="volume-value"></span></label><br>
-          <input type="range" min="0" max="100" value="50" class="slider" id="volume-slider">
+        <div class="col-8">
+          <div id="canvas-container" class="canvas-container"></div>
         </div>
 
       </div>
+      
     </div>
-    <div id="canvas-container" class="canvas-container"></div>
+    
   </div>
 
   <!-- Controls -->
