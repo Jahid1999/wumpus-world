@@ -81,7 +81,8 @@ label {
 }
 
 .sidebar-label {
-    color: #00264d;
+    /* color: #00264d; */
+    color: white;
     font-family: cursive;
     font-weight: bold;
 }

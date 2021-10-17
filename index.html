@@ -86,7 +86,7 @@
         <div class="col-4">
           <div class="sidebar">
             <div class="sidebar-content">
-              <label for="world-size-slider" class="sidebar-label">World size: <span class="world-size-value"></span></label><br>
+              <label for="world-size-slider" class="sidebar-label">World Size: <span class="world-size-value"></span></label><br>
               <input type="range" min="6" max="10" value="10" class="slider" id="world-size-slider">
             </div>
     
@@ -96,13 +96,13 @@
             </div>
     
             <div class="sidebar-content">
-              <label for="gold-number-slider" class="sidebar-label">Total Golds: <span class="gold-number-value"></span></label><br>
-              <input type="range" min="1" max="5" value="2" class="slider" id="gold-number-slider">
+              <label for="gold-number-slider" class="sidebar-label">Number of Gold: <span class="gold-number-value"></span></label><br>
+              <input type="range" min="1" max="5" value="1" class="slider" id="gold-number-slider">
             </div>
 
             <button type="button" class="btn btn-success btn-md" onclick="simulate()">Start</button>
-            <button type="button" class="btn btn-info btn-md" onclick="fixedRestart(); this.blur();">Restart</button>
-            <button type="button" class="btn btn-info btn-md" onclick="randomRestart(); this.blur();">Randomize</button>
+            <button type="button" style="background-color: darkcyan; color: white;" class="btn btn-md" onclick="fixedRestart(); this.blur();">Restart</button>
+            <button type="button" style="background-color: darkcyan; color: white;" class="btn btn-md" onclick="randomRestart(); this.blur();">Randomize</button>
     
           
             <div class="sidebar-content" style="opacity: 0;">
