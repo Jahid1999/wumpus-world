@@ -196,7 +196,16 @@ class Agent {
         clearInterval(interval);
         this.alive = false;
         defeat_sound.play();
-        console.log("You died. Game over!")
+        Swal.fire({
+            title: 'Lose!',
+            text: 'Alas!! You lost!',
+            icon: 'error',
+            confirmButtonText: 'Restart'
+          }).then((result) => {  
+            if (result.isConfirmed) {    
+                restart();
+            }
+        });
     }
 
     shoot() {
