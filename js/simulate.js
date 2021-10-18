@@ -48,6 +48,6 @@ class Simulate {
                 wumpuskillingwaiter--;
             }
 
-        }, 600);        
+        }, 700);        
     }
 }

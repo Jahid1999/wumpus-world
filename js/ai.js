@@ -192,10 +192,27 @@ class Ai {
         }
     }
 
+    printKnowledge() {
+        console.log("Breeze Knowledge");
+        for (var i = 0; i < this.worldSize; i++) {
+            console.log(this.breezeKnowledge[i]);
+            console.log();
+        }
+        console.log("Stench Knowledge");
+        for (var i = 0; i < this.worldSize; i++) {
+            console.log(this.stenchKnowledge[i]);
+            console.log();
+        }
+        console.log("Moves");
+        console.log(this.moves);
+    }
+
     getNextMove() {
         this.calculateAvailableMoves();
         this.calculateSafeMoves();
         let nextMoveArray = this.finalMove();
+
+        this.printKnowledge();
 
         if (!this.isDeadlock())
         {
