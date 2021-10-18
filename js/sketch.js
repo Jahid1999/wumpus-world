@@ -87,6 +87,11 @@ function restart() {
     clearInterval(interval);
     isManualMode = true;
     cheatMode=false;
+    totalScore = 0;
+    numOfSteps = 0;
+    arrowUsed = 0;
+    dead = 0;
+    goldCollected = 0;
     wumpusWorld = new World(roomsPerRow, pitPercentage, totalGold);
     flies_sound.stop();
     wind_sound.forEach(sound => {

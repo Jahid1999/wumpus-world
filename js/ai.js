@@ -540,63 +540,67 @@ class Ai {
 
         let a, b, c, d;
 
-        if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&pathMap[currentBox[0]-1][currentBox[1]]==0)
+        if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&pathMap[currentBox[0]][currentBox[1]-1]==0)
         {
-            let d1 = [...arrayOfMoves];
-            d = this.recursion([currentBox[0]-1,currentBox[1]], pathMap, row, col, d1, 0);
-        }
-        if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&pathMap[currentBox[0]][currentBox[1]+1]==0)
-        {
-            let b1 = [...arrayOfMoves];
-            b= this.recursion([currentBox[0],currentBox[1]+1], pathMap, row, col, b1, 1);
+            let c1 = [...arrayOfMoves];
+            let pathMapC = [...pathMap];
+            c = this.recursion([currentBox[0],currentBox[1]-1], pathMapC, row, col, c1, 3);
         }
         if (this.isBoxAvailable(currentBox[0]+1,currentBox[1])&&pathMap[currentBox[0]+1][currentBox[1]]==0)
         {
             let a1 = [...arrayOfMoves];
-            a = this.recursion([currentBox[0]+1,currentBox[1]], pathMap, row, col, a1, 2);
+            let pathMapA = [...pathMap];
+            a = this.recursion([currentBox[0]+1,currentBox[1]], pathMapA, row, col, a1, 2);
         }
-        if (this.isBoxAvailable(currentBox[0],currentBox[1]-1)&&pathMap[currentBox[0]][currentBox[1]-1]==0)
+        if (this.isBoxAvailable(currentBox[0],currentBox[1]+1)&&pathMap[currentBox[0]][currentBox[1]+1]==0)
         {
-            let c1 = [...arrayOfMoves];
-            c = this.recursion([currentBox[0],currentBox[1]-1], pathMap, row, col, c1, 3);
+            let b1 = [...arrayOfMoves];
+            let pathMapB = [...pathMap];
+            b= this.recursion([currentBox[0],currentBox[1]+1], pathMapB, row, col, b1, 1);
+        }
+        if (this.isBoxAvailable(currentBox[0]-1,currentBox[1])&&pathMap[currentBox[0]-1][currentBox[1]]==0)
+        {
+            let d1 = [...arrayOfMoves];
+            let pathMapD = [...pathMap];
+            d = this.recursion([currentBox[0]-1,currentBox[1]], pathMapD, row, col, d1, 0);
         }
 
-        let resultArray = [];
+        // let resultArray = [];
 
         if (a!=null||a!=undefined)
         {
-            resultArray.push(a);
+            return a; //resultArray.push(a);
         }
         else if (b!=null||b!=undefined)
         {
-            resultArray.push(b);
+            return b; //resultArray.push(b);
         }
         else if (c!=null||c!=undefined)
         {
-            resultArray.push(c);
+            return c; //resultArray.push(c);
         }
         else if (d!=null||d!=undefined)
         {
-            resultArray.push(d);
+            return d; //resultArray.push(d);
         }
 
-        let size = 99999;
+        // let size = 99999;
 
-        let finalMoves;
+        // let finalMoves;
 
-        for (let i=0; i<resultArray.length; i++)
-        {
-            if (resultArray[i].length<size)
-            {
-                finalMoves = resultArray[i];
-                size = finalMoves.length;
-            }
-        }
+        // for (let i=0; i<resultArray.length; i++)
+        // {
+        //     if (resultArray[i].length<size)
+        //     {
+        //         finalMoves = resultArray[i];
+        //         size = resultArray[i].length;
+        //     }
+        // }
 
-        if (finalMoves!=null||finalMoves!=undefined)
-        {
-            return finalMoves;
-        }
+        // if (finalMoves!=null||finalMoves!=undefined)
+        // {
+        //     return finalMoves;
+        // }
     }
 
     isMoveSafe(row,col) {

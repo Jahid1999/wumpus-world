@@ -187,7 +187,7 @@ class Agent {
                 Swal.fire({
                     position:'center-start',
                     title: 'Win!',
-                    html: `<b>Congratulations!! You Won! </b><hr> <b>Result</b><br> <div style="padding-top:7px">
+                    html: `<b>Congratulations! You Won! </b><hr> <b>Result</b><br> <div style="padding-top:7px">
                     Gold Collected: ${goldCollected} <br> Steps:  -${numOfSteps} <br> Arrow Used: ${arrowUsed}
                     <hr> Total Score: ${totalScore} </div>`,
                     icon: 'success',
@@ -213,7 +213,7 @@ class Agent {
         Swal.fire({
             position:'center-start',
             title: 'Lose!',
-            html: `<b>Alas!! You lost! </b><hr> <b>Result</b><br> <div style="padding-top:7px">
+            html: `<b>Alas! You lost! </b><hr> <b>Result</b><br> <div style="padding-top:7px">
             Dead: ${dead} <br> 
             Gold Collected: ${goldCollected} <br> Steps:  -${numOfSteps} <br> Arrow Used: ${arrowUsed}
             <hr> Total Score: ${totalScore} </div>`,
