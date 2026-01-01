@@ -157,6 +157,7 @@ class Agent {
         } else if (this.world.getRoom(this.position.x, this.position.y).containsGold()) {
             this.collectedGold += 1;
             goldCollected +=1000;
+            updateGoldCollectedDisplay(this.collectedGold, this.world.totalGold);
 
             this.world.getRoom(this.position.x, this.position.y).objects.forEach(obj => {
                 if (obj instanceof Gold) {
