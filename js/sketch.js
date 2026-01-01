@@ -92,6 +92,7 @@ function restart() {
     arrowUsed = 0;
     dead = 0;
     goldCollected = 0;
+    updateGoldCollectedDisplay(0, totalGold);
     wumpusWorld = new World(roomsPerRow, pitPercentage, totalGold);
     flies_sound.stop();
     wind_sound.forEach(sound => {
@@ -171,4 +172,39 @@ function simulate () {
     simulator = new Simulate(wumpusWorld);
 
     simulator.play();
+}
+
+// Mobile controls
+function mobileMove(direction) {
+    if (!wumpusWorld || !wumpusWorld.agent) return;
+
+    switch(direction) {
+        case 'up':
+            wumpusWorld.agent.up();
+            break;
+        case 'down':
+            wumpusWorld.agent.down();
+            break;
+        case 'left':
+            wumpusWorld.agent.left();
+            break;
+        case 'right':
+            wumpusWorld.agent.right();
+            break;
+    }
+
+    wumpusWorld.rooms.forEach(row => {
+        row.forEach(room => {
+            room.containsAgent = false;
+        });
+        wumpusWorld.agent.getCurrentRoom().containsAgent = true;
+    });
+}
+
+function mobileShoot() {
+    if (!wumpusWorld || !wumpusWorld.agent) return;
+
+    if (wumpusWorld.agent.alive && wumpusWorld.wumpus.alive) {
+        wumpusWorld.agent.shoot();
+    }
 }

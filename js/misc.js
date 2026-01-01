@@ -66,5 +66,11 @@ function updatePitPercentage() {
 function updateGoldNumber() {
     totalGold = $('#gold-number-slider').val();
     $('.gold-number-value').html(`${totalGold}`);
+    updateGoldCollectedDisplay(0, totalGold);
     restart();
+}
+
+function updateGoldCollectedDisplay(collected, total) {
+    $('#gold-collected-count').html(collected);
+    $('#gold-total-count').html(total);
 }

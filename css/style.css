@@ -86,3 +86,144 @@ label {
     font-family: cursive;
     font-weight: bold;
 }
+
+/* Gold collected display */
+#gold-collected-display {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #ffd700;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#gold-collected-display .sidebar-label {
+    color: #333;
+    font-size: 16px;
+}
+
+/* Mobile controls */
+.mobile-controls {
+    display: none;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.mobile-controls .btn {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+    border-radius: 10px;
+}
+
+.mobile-dpad {
+    display: grid;
+    grid-template-columns: repeat(3, 60px);
+    grid-template-rows: repeat(3, 60px);
+    gap: 5px;
+}
+
+.mobile-dpad .btn {
+    width: 60px;
+    height: 60px;
+    font-size: 20px;
+}
+
+.mobile-dpad .btn-up { grid-column: 2; grid-row: 1; }
+.mobile-dpad .btn-left { grid-column: 1; grid-row: 2; }
+.mobile-dpad .btn-right { grid-column: 3; grid-row: 2; }
+.mobile-dpad .btn-down { grid-column: 2; grid-row: 3; }
+
+.mobile-action-btn {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    font-weight: bold;
+    font-size: 14px !important;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-action-btn:hover,
+.mobile-action-btn:active {
+    background-color: #c82333;
+    color: white;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px auto;
+        padding: 10px;
+    }
+
+    .sidebar {
+        text-align: center;
+    }
+
+    .sidebar div,
+    .sidebar button {
+        margin: 10px 5px;
+    }
+
+    label {
+        font-size: 16px;
+    }
+
+    #gold-collected-display .sidebar-label {
+        font-size: 14px;
+    }
+
+    .mobile-controls {
+        display: flex;
+    }
+
+    .col-4, .col-7, .col-1 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .row {
+        flex-direction: column;
+    }
+
+    #canvas-container {
+        order: -1;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-container .col-1 {
+        order: 1;
+    }
+}
+
+@media (max-width: 480px) {
+    .mobile-dpad {
+        grid-template-columns: repeat(3, 50px);
+        grid-template-rows: repeat(3, 50px);
+    }
+
+    .mobile-dpad .btn,
+    .mobile-controls .btn {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+    }
+
+    #gold-collected-display {
+        padding: 8px;
+    }
+
+    #gold-collected-display .sidebar-label {
+        font-size: 12px;
+    }
+
+    #gold-collected-display img {
+        width: 20px !important;
+        height: 20px !important;
+    }
+}
